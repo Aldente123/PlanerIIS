@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>БКС • ИИС — персональный план</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<style>
+:root{
+  --bg:#eef3f9;--card:#fff;--ink:#172033;--muted:#667085;--muted2:#8b95a7;--line:#e3e8f0;
+  --blue:#2f63df;--blue2:#1f55cf;--blue-soft:#edf3ff;--blue-pale:#f5f8ff;
+  --green:#159a67;--green-soft:#eaf8f2;--orange:#f59e0b;--orange-soft:#fff7e8;
+  --red:#d94a52;--shadow:0 18px 60px rgba(28,47,80,.10);--r:28px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 8% 0%,rgba(47,99,223,.12),transparent 28rem),radial-gradient(circle at 100% 25%,rgba(21,154,103,.07),transparent 24rem),var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}
+button{border:0}
+.app{width:min(100%,780px);margin:0 auto;padding:18px 14px 48px}
+.shell{background:var(--card);border:1px solid rgba(23,32,51,.05);border-radius:34px;box-shadow:var(--shadow);overflow:hidden}
+.top{padding:26px 28px 0}
+.brand{display:flex;justify-content:space-between;align-items:center;gap:14px}.logo{font-size:25px;font-weight:850;letter-spacing:-.045em}.badge{color:var(--blue2);background:var(--blue-soft);padding:10px 16px;border-radius:999px;font-weight:750;font-size:15px;white-space:nowrap}
+.progress{height:7px;background:#edf0f5;border-radius:99px;margin-top:24px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),#6790ff);border-radius:inherit;transition:width .35s ease}
+.content{padding:32px 28px 34px}.step{display:none;animation:in .28s ease}.step.active{display:block}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.eyebrow{color:var(--blue);font-size:14px;font-weight:850;letter-spacing:.055em;text-transform:uppercase;margin-bottom:12px}h1,h2{letter-spacing:-.04em;margin:0}h1{font-size:clamp(36px,7vw,58px);line-height:.99;max-width:690px}h2{font-size:34px;line-height:1.05}.lead{font-size:20px;line-height:1.52;color:var(--muted);margin:18px 0 0;max-width:700px}
+.hero{margin-top:30px}.illustration{border-radius:28px;background:linear-gradient(145deg,#2258d5,#6490ef);position:relative;overflow:hidden;padding:28px;color:#fff;min-height:225px;box-shadow:inset 0 1px 0 rgba(255,255,255,.15)}.illustration:before,.illustration:after{content:"";position:absolute;border-radius:50%;background:rgba(255,255,255,.10);pointer-events:none}.illustration:before{width:250px;height:250px;right:-105px;top:-115px}.illustration:after{width:190px;height:190px;left:-105px;bottom:-125px}.illus-label{position:relative;z-index:1;font-size:14px;font-weight:850;letter-spacing:.05em;text-transform:uppercase;opacity:.9}.illus-title{position:relative;z-index:1;font-size:44px;line-height:1.04;font-weight:850;letter-spacing:-.045em;margin-top:18px;max-width:560px}.illus-sub{position:relative;z-index:1;font-size:17px;line-height:1.4;opacity:.86;margin-top:14px;max-width:540px}
+.mode-list{display:grid;gap:14px;margin-top:26px}.mode-card{width:100%;display:flex;align-items:flex-start;gap:18px;text-align:left;background:#fff;border:2px solid var(--line);border-radius:25px;padding:22px;cursor:pointer;transition:.22s;box-shadow:0 5px 18px rgba(20,40,70,.03)}.mode-card:hover{border-color:#b8caf5;transform:translateY(-1px)}.mode-icon{width:62px;height:62px;display:grid;place-items:center;border-radius:20px;background:var(--blue-soft);font-size:30px;flex:0 0 auto}.mode-copy{min-width:0}.mode-title{color:#3170df;font-size:24px;line-height:1.05;font-weight:850;letter-spacing:-.03em}.mode-desc{color:var(--muted);font-size:18px;line-height:1.45;margin-top:7px}
+.form{margin-top:30px}.field{margin-bottom:24px}.field label{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:780;line-height:1.35;margin-bottom:10px}.info{display:inline-grid;place-items:center;width:21px;height:21px;border:1.5px solid #9aa5b5;border-radius:50%;font-size:12px;color:#667085;background:#fff;cursor:pointer;font-weight:800}.input,.select{width:100%;border:2px solid var(--line);background:#fff;border-radius:17px;padding:16px 17px;font-size:20px;color:var(--ink);outline:none;transition:.18s}.input:focus,.select:focus{border-color:#7ea0ee;box-shadow:0 0 0 4px rgba(47,99,223,.09)}.helper{display:block;color:var(--muted);font-size:14px;line-height:1.45;margin-top:8px}.warning{display:block;background:var(--orange-soft);border:1px solid #f3d38c;color:#77530e;border-radius:17px;padding:14px 16px;font-size:14px;line-height:1.5;margin-top:14px}.warning>div{display:flex;flex-direction:column;gap:3px}.warning>div>b{font-size:13px;letter-spacing:.02em}.warning>ul{margin:10px 0 0;padding-left:18px}.warning li+li{margin-top:5px}.note{background:var(--blue-pale);border:1px solid #d9e4ff;color:#496080;border-radius:17px;padding:14px 15px;font-size:14px;line-height:1.5;margin-top:14px}
+.range-wrap{background:#f8faff;border:1px solid var(--line);border-radius:19px;padding:17px}.range-top{display:flex;justify-content:space-between;align-items:center;gap:12px}.range-value{font-size:23px;font-weight:850;color:var(--blue)}input[type=range]{width:100%;margin-top:17px;accent-color:var(--blue)}
+.choice-list{display:grid;gap:11px}.choice{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:16px;border:2px solid var(--line);border-radius:18px;cursor:pointer;background:#fff;transition:.18s}.choice.selected{border-color:var(--blue);background:var(--blue-pale)}.choice-main{min-width:0}.choice-name{font-weight:800;font-size:17px}.choice-meta{font-size:14px;color:var(--muted);margin-top:3px}.choice-rate{font-size:20px;font-weight:850;color:var(--blue);white-space:nowrap}
+.nav{display:flex;gap:12px;margin-top:28px}.btn{min-height:52px;border-radius:16px;padding:0 20px;font-weight:800;font-size:16px;cursor:pointer;transition:.18s}.btn-primary{flex:1;background:var(--blue);color:#fff;box-shadow:0 9px 22px rgba(47,99,223,.22)}.btn-primary:hover{background:var(--blue2);transform:translateY(-1px)}.btn-secondary{background:#f0f3f7;color:#344054}.btn:disabled{opacity:.45;cursor:not-allowed}
+.progress-note{font-size:13px;color:var(--muted2);text-align:right;margin-top:10px}
+.result-hero{background:linear-gradient(145deg,#173f9c,#3e73e9);border-radius:28px;color:#fff;padding:26px;margin-bottom:20px}.result-kicker{font-size:14px;font-weight:800;opacity:.82}.result-big{font-size:48px;line-height:1.02;font-weight:900;letter-spacing:-.05em;margin-top:10px}.result-big.clickable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-decoration-thickness:2px;text-underline-offset:8px}.result-amount-hint{font-size:12px;line-height:1.35;opacity:.78;margin-top:7px;display:none}.result-amount-hint.show{display:block}.cta-text-hidden{display:none!important}.result-sub{font-size:16px;line-height:1.45;opacity:.86;margin-top:9px}.pill{display:inline-flex;align-items:center;gap:7px;border-radius:999px;padding:7px 11px;background:rgba(255,255,255,.13);font-size:13px;font-weight:750;margin-top:15px}
+.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.metric{border:1px solid var(--line);border-radius:20px;padding:18px;background:#fff}.metric.green{background:var(--green-soft);border-color:#cfeede}.metric.blue{background:var(--blue-pale);border-color:#d9e4ff}.metric-label{font-size:13px;color:var(--muted);line-height:1.35}.metric-value{font-size:25px;font-weight:880;margin-top:6px;letter-spacing:-.035em}.metric-value.green{color:var(--green)}
+.benefits{margin-top:16px;display:grid;gap:10px}.benefit{display:flex;gap:12px;padding:15px 16px;border:1px solid var(--line);border-radius:18px;background:#fff}.benefit-dot{width:34px;height:34px;border-radius:12px;background:var(--blue-soft);display:grid;place-items:center;flex:0 0 auto;font-weight:900;color:var(--blue)}.benefit strong{display:block;font-size:16px}.benefit span{display:block;color:var(--muted);font-size:14px;line-height:1.42;margin-top:3px}
+.chart-card{margin-top:18px;border:1px solid var(--line);border-radius:22px;padding:17px;background:#fff}.chart-title{font-size:17px;font-weight:850}.chart-sub{font-size:13px;color:var(--muted);line-height:1.4;margin-top:4px}.chart-box{height:280px;margin-top:12px}.chart-box.small{height:250px}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px}
+.compare{margin-top:18px;background:#f8fafc;border:1px solid var(--line);border-radius:22px;padding:19px}.compare h3{margin:0;font-size:18px}.compare-list{display:grid;gap:11px;margin-top:13px}.compare-row{display:grid;grid-template-columns:1fr auto;gap:15px;align-items:start;padding-bottom:11px;border-bottom:1px solid var(--line)}.compare-row:last-child{border-bottom:0;padding-bottom:0}.compare-row b{font-size:16px}.compare-row span{color:var(--muted);font-size:14px;line-height:1.4}.compare-val{text-align:right;font-weight:850;color:var(--green);white-space:nowrap}.compare-val.blue{color:var(--blue)}
+.goal-progress{margin-top:18px;border:1px solid #d9e4ff;background:var(--blue-pale);border-radius:22px;padding:18px}.goal-progress-head{display:flex;justify-content:space-between;gap:12px;align-items:end}.goal-progress strong{font-size:23px}.bar{height:13px;background:#dfe7f6;border-radius:99px;overflow:hidden;margin-top:13px}.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--blue),#7b9fff);border-radius:inherit}.payments{margin-top:18px;border:1px solid var(--line);border-radius:22px;padding:18px;background:#fff}.payments-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:13px}.pay{border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center}.pay-month{font-size:11px;color:var(--muted)}.pay-amount{font-size:14px;font-weight:800;margin-top:4px}
+.cta{margin-top:18px;background:linear-gradient(145deg,#eef4ff,#f6f9ff);border:1px solid #dce6fb;border-radius:24px;padding:20px}.cta h3{margin:0;font-size:20px}.cta p{color:var(--muted);line-height:1.45;font-size:14px;margin:8px 0 16px}.cta .btn{width:100%}.cta-actions{display:grid;gap:10px}.cta-text-hidden+.cta-actions{margin-top:14px}.cta-actions .btn{width:100%}.secondary-action{width:100%;margin-top:10px;background:#fff;border:1px solid var(--line);color:#344054}.link-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}.link-btn{display:flex;align-items:center;justify-content:center;min-height:50px;border-radius:15px;background:#f4f7fc;border:1px solid var(--line);color:#294b8f;text-decoration:none;font-weight:800;font-size:15px;text-align:center;padding:10px 12px}.link-btn.primary{background:var(--blue-soft);border-color:#d6e2ff;color:var(--blue2)}.single-link{grid-template-columns:1fr;max-width:340px;margin:18px auto 0}.transfer-card{margin-top:14px;border:1px solid #dce6fb;background:linear-gradient(145deg,#f7faff,#eef4ff);border-radius:20px;padding:16px}.transfer-card strong{display:block;font-size:16px}.transfer-card span{display:block;color:var(--muted);font-size:14px;line-height:1.45;margin-top:5px}.transfer-link{display:inline-block;margin-top:10px;color:var(--blue2);font-weight:800;text-decoration:none}.term-banner{margin-bottom:22px;border-radius:24px;padding:19px 20px;background:linear-gradient(145deg,#eef4ff,#f7faff);border:1px solid #d8e4fb}.term-banner-kicker{font-size:12px;font-weight:850;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}.optimization-slider{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff}.optimization-result{margin-top:10px;font-size:14px;font-weight:750;color:#294b8f;line-height:1.4}.term-banner-title{font-size:25px;line-height:1.12;font-weight:880;letter-spacing:-.035em;margin-top:6px}.term-banner-text{font-size:14px;line-height:1.45;color:var(--muted);margin-top:7px}.goal-insight{margin-top:16px;border:1px solid #dce6fb;background:var(--blue-pale);border-radius:18px;padding:14px 15px;color:#496080;font-size:14px;line-height:1.5}.goal-insight b{color:var(--ink)}
+.disclaimer{margin-top:17px;color:#7a8495;font-size:12px;line-height:1.5}.edit{margin-top:16px;width:100%;background:#fff;border:1px solid var(--line);color:#475467}
+.modal{position:fixed;inset:0;background:rgba(13,25,43,.46);display:none;align-items:flex-end;justify-content:center;padding:18px;z-index:20}.modal.open{display:flex}.modal-card{width:min(100%,560px);background:#fff;border-radius:26px;padding:22px;box-shadow:0 25px 80px rgba(0,0,0,.25)}.modal-card h3{margin:0;font-size:22px}.modal-card p{color:var(--muted);line-height:1.55;font-size:15px}.modal-close{width:100%;margin-top:8px;background:#f0f3f7;color:#344054}
+.hidden{display:none!important}
+@media(max-width:600px){.app{padding:10px 10px 32px}.shell{border-radius:29px}.top{padding:22px 22px 0}.content{padding:27px 22px 28px}.logo{font-size:22px}.badge{font-size:14px;padding:9px 13px}.illustration{min-height:245px;padding:25px}.illus-title{font-size:38px}.lead{font-size:18px}.mode-card{padding:18px;gap:14px}.mode-icon{width:56px;height:56px;font-size:27px}.mode-title{font-size:22px}.mode-desc{font-size:17px}.summary-grid{grid-template-columns:1fr}.result-big{font-size:42px}.payments-grid{grid-template-columns:repeat(3,1fr)}.link-row{grid-template-columns:1fr}.nav{flex-direction:column-reverse}.nav .btn-secondary{width:100%}}
+
+.mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:22px;padding:6px;background:#f1f4f8;border-radius:20px}.mode-tab{display:flex;align-items:center;justify-content:center;gap:9px;min-height:56px;border-radius:15px;background:transparent;color:#667085;font-weight:850;font-size:16px;cursor:pointer;transition:.25s}.mode-tab.selected{background:#fff;color:var(--blue);box-shadow:0 5px 18px rgba(20,40,70,.08)}.svg-icon{width:32px!important;height:32px!important;border-radius:10px!important;font-size:0!important}.svg-icon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:2.8;stroke-linecap:round;stroke-linejoin:round}.mode-description{display:block;max-height:0;opacity:0;overflow:hidden;transform:translateY(-5px);transition:max-height .3s ease,opacity .25s ease,transform .3s ease;margin-top:0}.mode-description>*{overflow:hidden}.mode-description.active{max-height:140px;opacity:1;transform:none;margin-top:12px}.mode-description strong{display:block;font-size:18px}.mode-description span{display:block;color:var(--muted);font-size:15px;line-height:1.45;margin-top:4px}.start-continue{margin-top:18px;width:100%}.chart-insights{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px}.chart-insight{border:1px solid var(--line);border-radius:15px;padding:11px;background:#f8fafc;min-width:0}.chart-insight.accent{background:#effaf5;border-color:#bfe9d4}.chart-insight b{display:block;font-size:16px}.chart-insight span{display:block;color:var(--muted);font-size:11px;line-height:1.3;margin-top:3px}.payments-actions{display:flex;gap:10px;margin-top:14px}.payment-pager{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px;padding-top:10px;border-top:1px solid #edf0f4}.pager-btn{min-width:42px;height:40px;border:1px solid var(--line);background:#fff;border-radius:12px;font-weight:850;color:#344054;cursor:pointer}.pager-btn:disabled{opacity:.4;cursor:not-allowed}.pager-status{font-size:12px;color:var(--muted);text-align:center}.goal-frequency-note{margin-top:14px}.capital-optimization{margin-top:18px;border:1px solid #f0d59a;background:linear-gradient(145deg,#fffaf0,#fff);border-radius:22px;padding:18px}.capital-optimization h4{margin:0;font-size:18px}.capital-optimization p{margin:7px 0 0;color:#6d5a2a;font-size:14px;line-height:1.48}.tax-ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:14px}.tax-ladder-card{border:1px solid #ead9ad;border-radius:15px;background:#fff;padding:12px}.tax-ladder-card b{display:block;font-size:15px}.tax-ladder-card span{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:4px}.tax-ladder-card strong{display:block;color:#9b6b00;font-size:16px;margin-top:7px}.optimization-total{margin-top:12px;padding:12px 13px;border-radius:15px;background:#fff;border:1px dashed #e1c77f;font-size:13px;line-height:1.45;color:#624c19}.optimization-total b{color:#172033}.download-btn{flex:1;border:1px solid var(--line);background:#fff;color:#344054;border-radius:14px;min-height:46px;font-weight:800;cursor:pointer}.optimization{margin-top:18px;border:1px solid #dce6fb;background:#f6f9ff;border-radius:22px;padding:18px}.optimization h4{margin:0;font-size:17px}.optimization p{margin:6px 0 12px;color:var(--muted);font-size:14px;line-height:1.45}.optimization-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.optimization-card{border:1px solid var(--line);border-radius:15px;background:#fff;padding:12px}.optimization-card b{display:block;font-size:15px}.optimization-card span{display:block;color:var(--muted);font-size:12px;margin-top:4px;line-height:1.35}.optimization-card strong{display:block;color:var(--blue);font-size:17px;margin-top:7px}.optimization-slider{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff}.optimization-result{margin-top:10px;font-size:14px;font-weight:750;color:#294b8f;line-height:1.4}.term-banner-title{display:inline-block;background:linear-gradient(90deg,#2f63df,#5c86ea);color:#fff;padding:9px 13px;border-radius:13px;box-shadow:0 8px 18px rgba(47,99,223,.18)}.cta-actions{display:grid!important;grid-template-columns:1fr 1fr;gap:12px!important}.cta-actions .btn{display:flex;align-items:center;justify-content:center;text-decoration:none;position:static!important;float:none!important}.cta-actions a{color:#fff!important;text-decoration:none!important}.cta-actions .btn-secondary{background:#fff;color:#294b8f!important;border:1px solid #d7e1f4}.compare-row>div:first-child{min-width:0}.compare-row b{display:block;line-height:1.3}.compare-row span{display:block;margin-top:5px;white-space:normal;overflow-wrap:anywhere}.compare-val{line-height:1.2}.payment-table{display:grid;gap:6px;margin-top:14px;max-height:none;overflow:visible;padding-right:0}.payment-line{display:grid;grid-template-columns:70px 1fr 100px;gap:8px;align-items:center;border-bottom:1px solid #edf0f4;padding:8px 2px;font-size:12px}.payment-line b{text-align:right}.payment-line span{color:var(--muted)}@media(max-width:600px){.chart-insights{grid-template-columns:1fr 1fr}.optimization-grid{grid-template-columns:1fr}.tax-ladder{grid-template-columns:1fr}.cta-actions{grid-template-columns:1fr}.payments-actions{flex-direction:column}}
+.goal-frequency-control{margin-top:16px;border:1px solid var(--line);background:#fff;border-radius:20px;padding:16px}.goal-frequency-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.goal-frequency-value{font-size:18px;font-weight:850;color:var(--blue)}.goal-frequency-control input[type=range]{margin-top:12px}.goal-frequency-caption{font-size:13px;color:var(--muted);line-height:1.4;margin-top:6px}
+.result-params{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.result-param{padding:10px 12px;border:1px solid #dce6fb;border-radius:14px;background:#fff}.result-param span{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}.result-param b{font-size:13px;line-height:1.3;display:block}.term-info{margin-left:6px;vertical-align:middle}.goal-benefits{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.goal-benefit{padding:11px;border:1px solid #dce6fb;border-radius:14px;background:#f8fbff}.goal-benefit b{display:block;font-size:13px}.goal-benefit span{display:block;font-size:11px;color:var(--muted);line-height:1.35;margin-top:3px}.widget-card{margin-top:14px;border:1px solid #bfd2ff;background:linear-gradient(135deg,#eef4ff,#f8fbff);border-radius:18px;padding:16px}.widget-card b{font-size:16px}.widget-card p{margin:5px 0 0;color:#496080;font-size:13px;line-height:1.45}.edit-inline{margin-top:12px;width:100%}@media(max-width:600px){.result-params,.goal-benefits{grid-template-columns:1fr 1fr}}
+
+/* Final-result refinement */
+.result-hero{padding:28px 24px 22px;background:linear-gradient(145deg,#173f9c 0%,#315fce 58%,#4d7dea 100%)}
+.result-kicker{font-size:15px;letter-spacing:.02em;text-transform:none;opacity:.78}
+.result-sub{max-width:560px;font-size:15px;min-height:44px}
+.pill{display:block;background:transparent;padding:0;margin-top:22px}
+.params-heading{font-size:13px;font-weight:800;opacity:.78;margin:0 0 9px}
+.result-params{margin-top:0}
+.result-param{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.96);cursor:pointer;transition:.18s;text-align:left}
+.result-param:hover{transform:translateY(-1px);box-shadow:0 7px 18px rgba(15,35,86,.18)}
+.result-param span::after{content:' ↗';color:var(--blue);font-weight:800}
+.result-param b{color:var(--ink)}
+.compare{margin-top:16px;background:#fff;border-color:#dce6fb}
+.compare::before{content:'Итоговая выгода ИИС';display:block;font-size:18px;font-weight:850;margin-bottom:3px}
+.compare::after{content:'Нажмите на карточку преимущества, чтобы увидеть, как рассчитана выгода.';display:block;font-size:13px;color:var(--muted);line-height:1.4;margin-bottom:12px}
+.compare-list{margin-top:0}
+.compare-row:first-child{padding-top:0}
+.benefit-total{background:linear-gradient(145deg,#f1f6ff,#f8fbff);border:1px solid #dce6fb;border-radius:16px;padding:13px;margin-bottom:3px}
+.widget-card{padding:0;overflow:hidden;background:#fff;border:1px solid #c7d8ff;box-shadow:0 12px 28px rgba(47,99,223,.10)}
+.widget-preview{padding:16px;background:linear-gradient(145deg,#eef4ff,#f8fbff);border-bottom:1px solid #d9e4ff}
+.widget-preview-head{display:flex;justify-content:space-between;gap:12px;align-items:center}.widget-preview-title{font-weight:850;font-size:16px}.widget-badge{font-size:11px;font-weight:800;color:#2459c8;background:#fff;padding:5px 8px;border-radius:999px;border:1px solid #dce6fb}.widget-progress-num{font-size:28px;font-weight:900;letter-spacing:-.04em;margin-top:8px}.widget-mini{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.widget-mini>div{background:#fff;border:1px solid #dce6fb;border-radius:12px;padding:9px}.widget-mini span{display:block;font-size:11px;color:var(--muted)}.widget-mini b{display:block;margin-top:3px;font-size:13px}.widget-caption{padding:13px 15px;color:#496080;font-size:13px;line-height:1.45}.widget-caption b{color:var(--ink)}
+.chart-insights{grid-template-columns:repeat(4,1fr)}.chart-fallback{height:100%;display:grid;place-content:center;text-align:center;gap:8px;color:var(--muted);font-size:14px;padding:24px}.chart-fallback b{color:var(--ink)}
+@media(max-width:600px){.chart-insights{grid-template-columns:1fr 1fr}.result-hero{padding:24px 18px 18px}.result-sub{min-height:auto}.result-param{min-height:74px}}
+
+@media(max-width:600px){.compare-row{grid-template-columns:1fr}.compare-val{text-align:left;white-space:normal;margin-top:3px}.compare-row span{font-size:13px}.metric-value{font-size:23px}.summary-grid .metric{padding:16px}.params-heading{line-height:1.35}}
+
+/* Polish pass: final UX */
+.mode-description{padding:0 8px;text-align:center}.mode-description.active{max-height:170px}.mode-description strong{color:var(--ink);letter-spacing:-.02em}.mode-description span{max-width:520px;margin:6px auto 0}
+.important-term{margin-top:18px;border:1px solid #c9d9ff;background:linear-gradient(135deg,#eaf1ff,#f8fbff);border-radius:20px;padding:16px 17px;box-shadow:0 10px 24px rgba(47,99,223,.08)}.important-term .important-kicker{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.important-term b{display:block;font-size:17px;margin-top:5px}.important-term p{margin:7px 0 0;color:#496080;font-size:14px;line-height:1.45}.important-term .transfer-mini{margin-top:10px;padding-top:10px;border-top:1px solid #d6e3ff;color:#496080;font-size:13px;line-height:1.45}.important-term-compact{width:100%;text-align:left;cursor:pointer;font:inherit}.important-term-compact span{display:block;margin-top:6px;color:#496080;font-size:13px;line-height:1.35}.important-term-compact:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(47,99,223,.12)}
+.compare{background:linear-gradient(145deg,#eaf8f1,#f8fffb);border:1px solid #a9dfc6;box-shadow:0 10px 26px rgba(21,154,103,.08);overflow:hidden}.compare::before{content:none}.compare::after{content:none}.compare-list{gap:12px}.benefit-summary-title{font-size:20px;font-weight:900;letter-spacing:-.03em;color:#116b49}.benefit-summary-sub{font-size:13px;color:#4c6b5f;line-height:1.4;margin-top:4px}.benefit-summary-broker{margin-top:14px;padding:13px 14px;border:1px solid #cfe9db;border-radius:16px;background:rgba(255,255,255,.78)}.benefit-summary-broker span{display:block;color:#61746d;font-size:12px;line-height:1.35}.benefit-summary-broker b{display:block;margin-top:4px;font-size:24px;letter-spacing:-.04em;color:#172033}.benefit-linked{display:grid;grid-template-columns:1.2fr .8fr;gap:9px}.benefit-main,.benefit-percent-box,.benefit-time-box{border-radius:16px;padding:13px 14px}.benefit-main{background:#159a67;color:#fff}.benefit-main span,.benefit-percent-box span,.benefit-time-box span{display:block;font-size:12px;line-height:1.3}.benefit-main b{display:block;margin-top:5px;font-size:28px;letter-spacing:-.04em;overflow-wrap:anywhere}.benefit-percent-box{background:#d8f2e5;border:1px solid #b6e4cd;color:#116b49}.benefit-percent-box b,.benefit-time-box b{display:block;margin-top:5px;font-size:23px;letter-spacing:-.04em}.benefit-time-box{background:#fff;border:1px solid #cfe9db;color:#176448}.benefit-time-box{grid-column:1/-1}.benefit-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px}.benefit-card{width:100%;text-align:left;border:1px solid #cfe4d9;border-radius:15px;padding:12px;background:rgba(255,255,255,.82);cursor:pointer;transition:.18s;min-width:0}.benefit-card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(21,154,103,.09)}.benefit-card.warning{grid-column:1/-1}.benefit-card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.benefit-card-top b{font-size:13px;line-height:1.25}.benefit-card-top strong{font-size:16px;white-space:nowrap;letter-spacing:-.02em}.benefit-card span{display:block;color:#5b6d67;font-size:11px;line-height:1.35;margin-top:5px}.benefit-card small{display:block;color:#159a67;font-weight:800;font-size:10px;margin-top:7px}.benefit-optim-link{display:inline-flex;margin-top:7px;color:#116b49;font-size:11px;font-weight:850;text-decoration:underline}.benefit-period{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.period-metric{padding:11px;border-radius:14px;background:#fff;border:1px solid #cfe9db}.period-metric span{display:block;color:#64766f;font-size:11px;line-height:1.25}.period-metric b{display:block;margin-top:5px;font-size:15px;letter-spacing:-.025em;overflow-wrap:anywhere}.benefit-hint{font-size:12px;color:#527166;margin-top:2px}.benefit-main-expanded{padding:15px}.benefit-main-details{display:grid;grid-template-columns:1fr;gap:6px;margin-top:12px}.benefit-main-details button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 10px;border:1px solid rgba(255,255,255,.26);border-radius:11px;background:rgba(255,255,255,.12);color:#fff;text-align:left;cursor:pointer;font:inherit}.benefit-main-details button span{font-size:11px;opacity:.88}.benefit-main-details button strong{font-size:14px;white-space:nowrap}.benefit-period-inline{margin-top:10px}.benefit-main .period-metric{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.24)}.benefit-main .period-metric span{color:rgba(255,255,255,.75)}.benefit-main .period-metric b{color:#fff}.benefit-main .benefit-optim-link{color:#dff8eb;background:transparent;border:0;padding:0;cursor:pointer}.benefit-period-two{grid-template-columns:1fr 1fr}.benefit-sales-metric-wide{grid-column:1/-1}
+
+.chart-card.comparison-chart{background:#fff}.alternative-note{margin-top:12px;padding:11px 12px;border-radius:14px;background:#f6f8fb;border:1px solid var(--line);color:#5f6b7d;font-size:12px;line-height:1.4}.chart-insights{display:none!important}
+.result-anchor{scroll-margin-top:18px}.plan-details{margin-top:14px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}.plan-details summary{list-style:none;cursor:pointer;padding:14px 15px;font-weight:850;display:flex;justify-content:space-between;gap:12px}.plan-details summary::-webkit-details-marker{display:none}.plan-details summary:after{content:'⌄';color:var(--blue);font-size:18px;transition:.2s}.plan-details[open] summary:after{transform:rotate(180deg)}.plan-details-body{padding:0 14px 14px}.payment-table{margin-top:0}.widget-settings{cursor:pointer}.widget-caption b{display:block;font-size:17px;color:var(--blue2)}.widget-caption-accent{display:block;margin-top:2px;color:#496080;font-size:14px;font-weight:750}.widget-caption p{margin-top:7px}
+@media(max-width:600px){.benefit-linked{grid-template-columns:1fr}.benefit-breakdown{grid-template-columns:1fr}.benefit-card.warning{grid-column:auto}.benefit-period{grid-template-columns:1fr}.benefit-main b{font-size:25px}.benefit-summary-broker b{font-size:22px}}
+
+/* refinement: compact, readable term and result blocks */
+.important-term.important-term-compact{display:flex;align-items:center;gap:12px;text-align:left;width:100%;cursor:pointer;border:1px solid #c7d7ff;background:linear-gradient(135deg,#edf3ff,#f8fbff);box-shadow:none}
+.important-term.important-term-compact .important-kicker{flex:0 0 auto;margin:0;padding:8px 10px;border-radius:12px;background:#2f63df;color:#fff;font-size:12px;letter-spacing:.08em}
+.important-term.important-term-compact b{margin:0;font-size:16px;line-height:1.25}
+.important-term.important-term-compact span{margin-left:auto;color:#496080;font-size:12px;line-height:1.3;text-align:right}
+.important-term.important-term-compact::after{content:'›';font-size:24px;line-height:1;color:#2f63df}
+.result-hero .pill{display:block;width:100%;padding:0;background:transparent;border-radius:0;margin-top:16px}
+.deduction-toggle{margin:12px 0 4px;padding:12px 14px;border:1px solid rgba(255,255,255,.24);border-radius:16px;background:rgba(255,255,255,.09);display:flex;align-items:center;justify-content:space-between;gap:12px}.deduction-toggle-text{display:flex;flex-direction:column;gap:3px}.deduction-toggle-text b{font-size:13px}.deduction-toggle-text span{font-size:11px;line-height:1.35;opacity:.8}.deduction-toggle button{border:0;border-radius:999px;padding:9px 12px;font:inherit;font-size:12px;font-weight:850;cursor:pointer;color:#173f9c;background:#fff}.deduction-toggle button.active{background:#d9f7e9;color:#17633f}
+.params-heading{font-size:12px;line-height:1.35;margin:0 0 8px;color:rgba(255,255,255,.78);opacity:1}
+.result-params{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:0}
+.result-param{padding:8px 9px;border-radius:12px;background:rgba(255,255,255,.98);border:1px solid rgba(255,255,255,.5);min-height:0;box-shadow:none}
+.result-param span{font-size:10px;margin-bottom:2px;line-height:1.15}.result-param b{font-size:12px;line-height:1.2;overflow-wrap:anywhere}
+.cta{text-align:center;padding:22px 18px}.cta h3{font-size:21px}.cta p{max-width:500px;margin:8px auto 16px}.cta-actions{max-width:520px;margin:0 auto}.restart-btn{margin:12px auto 0}
+@media(max-width:600px){.result-params{grid-template-columns:1fr 1fr}.result-param{padding:8px}.result-param span{font-size:9px}.result-param b{font-size:11px}.important-term.important-term-compact{align-items:flex-start}.important-term.important-term-compact span{display:none}}
+
+/* Final UX: key sales points are grouped with the main IIS advantage */
+.benefit-linked{display:block}.benefit-sales-grid{display:grid;grid-template-columns:1.35fr .85fr .85fr;gap:8px;align-items:stretch}.benefit-sales-primary,.benefit-sales-metric{border:1px solid rgba(255,255,255,.24);border-radius:13px;padding:11px 12px;background:rgba(255,255,255,.1)}.benefit-sales-primary{background:rgba(255,255,255,.16)}.benefit-sales-primary span,.benefit-sales-metric span{display:block;font-size:11px;line-height:1.25;color:rgba(255,255,255,.78)}.benefit-sales-primary b{font-size:28px;margin-top:4px}.benefit-sales-metric b{display:block;font-size:20px;line-height:1.15;margin-top:5px;letter-spacing:-.035em;color:#fff}.benefit-sales-metric .benefit-optim-link{font-size:10px;line-height:1.2;margin-top:6px;text-align:left}.benefit-main-expanded>.benefit-main-details{margin-top:10px}@media(max-width:720px){.benefit-sales-grid{grid-template-columns:1fr 1fr}.benefit-sales-primary{grid-column:1/-1}.benefit-sales-primary b{font-size:26px}.benefit-sales-metric b{font-size:19px}}@media(max-width:390px){.benefit-sales-grid{grid-template-columns:1fr}.benefit-sales-primary{grid-column:auto}}
+
+/* Final UX refinements */
+.benefit-main-details button{position:relative;transition:.18s}
+.benefit-main-details button:hover{background:rgba(255,255,255,.18);transform:translateY(-1px)}
+.benefit-main-details button span{display:flex;flex-direction:column;gap:2px}
+.benefit-main-details button small{display:block;font-size:9px;line-height:1.1;color:rgba(255,255,255,.72);font-weight:800;letter-spacing:.02em}
+.alternative-note{padding:14px 15px;background:linear-gradient(135deg,#f5f8ff,#f7fbff);border-color:#d8e3f5}
+.alternative-note-title{font-weight:850;color:#24324a;line-height:1.35;margin-bottom:8px}
+.alternative-note-insurance{padding-top:8px;border-top:1px solid #dde6f3;color:#52637a;line-height:1.45}
+.alternative-note-insurance b{color:#294b8f}
+.alternative-note a{font-weight:850;color:#2f63df;text-decoration:none;white-space:nowrap}
+.alternative-note a:hover{text-decoration:underline}
+
+/* Final desktop adaptation: keep the mobile composition unchanged */
+@media (min-width: 601px){
+  .compare{padding:26px 28px;border-radius:26px}
+  .benefit-summary-title{font-size:28px}
+  .benefit-summary-broker{margin-top:18px;padding:17px 18px}
+  .benefit-summary-broker span{font-size:14px}
+  .benefit-summary-broker b{font-size:30px}
+  .benefit-linked{grid-template-columns:minmax(320px,1.35fr) minmax(190px,.8fr);gap:14px;align-items:stretch}
+  .benefit-main{padding:20px 22px;min-height:176px;display:flex;flex-direction:column;justify-content:center}
+  .benefit-main b{font-size:42px;line-height:1.04;letter-spacing:-.05em}
+  .benefit-main-details{grid-template-columns:1fr 1fr;gap:8px}
+  .benefit-percent-box,.benefit-time-box{padding:18px 20px;display:flex;flex-direction:column;justify-content:center}
+  .benefit-percent-box b,.benefit-time-box b{font-size:31px}
+  .benefit-period{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .period-metric{padding:14px 15px;min-height:92px}
+  .benefit-breakdown{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+  .benefit-card{padding:15px 16px;min-height:126px}
+  .benefit-card.warning{grid-column:1/-1}
+}
+.insurance-icon{display:inline-grid;place-items:center;width:24px;height:24px;margin-right:8px;border-radius:50%;background:#eaf1ff;color:#2f63df;font-size:15px;vertical-align:middle}
+
+/* Requested final desktop-only refinements */
+.result-contribution{display:inline-block;color:#dce8ff;font-weight:850;padding:2px 7px;border-radius:9px;background:rgba(255,255,255,.13);box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.alternative-note-sources{margin-top:10px;padding-top:9px;border-top:1px solid #dde6f3;font-size:11px;color:#68778c;line-height:1.45}
+@media (min-width: 601px){
+  .compare .benefit-main-expanded{padding:22px 24px}
+  .compare .benefit-sales-grid{grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1fr)!important}
+  .compare .benefit-sales-primary,.compare .benefit-sales-metric{min-width:0}
+  .compare .benefit-sales-primary b{font-size:clamp(28px,3vw,44px);line-height:1.04;overflow-wrap:anywhere}
+  .compare .benefit-sales-metric b{font-size:clamp(20px,2.3vw,31px);overflow-wrap:anywhere}
+  .compare .benefit-main-details{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+  .compare .benefit-main-details button{min-height:82px;align-items:center}
+  .compare .benefit-main-details button span{min-width:0}
+  .compare .benefit-main-details button strong{font-size:clamp(14px,1.35vw,21px);white-space:normal;overflow-wrap:anywhere}
+  .compare .benefit-period-two{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .compare .period-metric{min-height:96px;display:flex;flex-direction:column;justify-content:center;min-width:0}
+  .compare .period-metric b{font-size:clamp(17px,2vw,30px);line-height:1.08;overflow-wrap:anywhere}
+  .compare .period-metric span{font-size:13px}
+}
+
+/* Targeted final fixes */
+.params-heading-centered{text-align:center;width:100%;}
+.benefit-summary-title-centered{text-align:center;width:100%;}
+.goal-result-contribution b em{font-style:normal;color:#9fe7ff;text-shadow:0 0 18px rgba(159,231,255,.18)}
+.goal-result-frequency{overflow:hidden}.goal-result-frequency input[type=range]{height:34px;cursor:grab;touch-action:pan-x}.goal-result-frequency input[type=range]:active{cursor:grabbing}.goal-frequency-marks{display:flex;justify-content:space-between;gap:6px;margin-top:1px;color:rgba(255,255,255,.58);font-size:9px;white-space:nowrap}.goal-frequency-marks span:nth-child(3){margin-left:auto;margin-right:10px}.goal-frequency-caption{text-align:center;font-size:11px!important;color:rgba(255,255,255,.82)!important;margin-top:6px!important}
+.term-warning-inline{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:7px 9px;border-radius:10px;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.3);color:#8a5b00;font-size:11px;line-height:1.35}.term-warning-inline button{width:17px;height:17px;border-radius:50%;background:#fff;border:1px solid #d9a62b;color:#8a5b00;font-size:10px;font-weight:900;cursor:pointer;padding:0;flex:0 0 auto}
+.planner-showcase{flex-direction:column;align-items:center;gap:8px}.planner-showcase-head{flex:0 0 auto}.planner-app-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.planner-settings{width:34px;height:34px;border-radius:12px;border:1px solid #dce6fb;background:#fff;color:#2f63df;font-size:17px;cursor:pointer}.planner-widget{margin-top:18px;padding:13px;border:1px solid #dce6fb;border-radius:18px;background:linear-gradient(180deg,#fff,#f6f9ff);box-shadow:0 8px 20px rgba(47,99,223,.06)}.planner-widget-title{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:#526174}.planner-widget-title b{font-size:22px;color:#2f63df;letter-spacing:-.03em}.planner-bar{margin-top:9px;height:10px}.planner-widget-caption{display:flex;justify-content:space-between;gap:8px;margin-top:8px;font-size:10px;color:#667085}.planner-widget-caption b{color:#24324a}.planner-settings-row{width:100%;display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding:10px 11px;border:1px solid #e3e8f0;border-radius:12px;background:#fff;color:#2f63df;font:inherit;font-size:11px;font-weight:800;cursor:pointer}.planner-settings-row b{font-size:18px;line-height:1}
+.modal{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));align-items:center}.modal-card{width:min(560px,calc(100vw - 24px));max-height:calc(100dvh - 24px);overflow:auto;border-radius:24px}.modal-card p{overflow-wrap:anywhere;word-break:normal}.modal-card h3{overflow-wrap:anywhere}
+@media(max-width:600px){.modal{align-items:flex-end}.modal-card{width:calc(100vw - 24px);max-width:calc(100vw - 24px);max-height:min(82dvh,720px);padding:18px;border-radius:22px 22px 18px 18px}.modal-card h3{font-size:19px}.modal-card p{font-size:14px;line-height:1.48}.goal-result-frequency input[type=range]{height:38px;margin-top:5px}.goal-frequency-marks{font-size:8px}.params-heading-centered{font-size:11px}.benefit-summary-title-centered{text-align:center}.planner-showcase-head p{margin-bottom:10px}}
+
+/* Final targeted polish */
+#screenResult .eyebrow{text-align:center;width:100%;}
+#screenResult .optimization>h4{text-align:center;width:100%;}
+.result-kicker .result-info{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-left:6px;transform:translateY(-1px);}
+.goal-frequency-marks{display:none!important;}
+.goal-result-frequency input[type=range]{display:block;width:100%;margin:10px 0 0;min-height:38px;}
+.iphone-frame{width:min(100%,330px);border-radius:50px;aspect-ratio:9/19.5;}
+.iphone-screen{min-height:610px;padding-bottom:42px;}
+@media(max-width:600px){.iphone-screen{min-height:560px}.iphone-frame{border-radius:44px}.iphone-home{bottom:16px}}
+</style>
+<style>.result-info{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.6);font-size:11px;font-weight:900;cursor:pointer;margin-left:6px;vertical-align:2px}.benefit-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}.benefit-card{border:1px solid var(--line);border-radius:16px;padding:13px;background:#fff;cursor:pointer;text-align:left}.benefit-card.blue{background:#f3f7ff;border-color:#d8e4ff}.benefit-card.green{background:#f2fbf7;border-color:#cdeedd}.benefit-card.gold{background:#fffaf0;border-color:#f1dfb5}.benefit-card b{display:block;font-size:13px}.benefit-card span{display:block;color:var(--muted);font-size:11px;line-height:1.35;margin-top:4px}.benefit-card strong{display:block;font-size:20px;margin-top:8px;color:var(--ink)}.benefit-card small{display:block;color:var(--blue);font-size:11px;margin-top:8px}.compare-summary{padding:13px 0 4px;border-bottom:1px solid #edf0f4}.compare-summary .label{color:var(--muted);font-size:13px}.compare-summary .broker{font-size:26px;font-weight:900;margin-top:3px}.compare-adv{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.compare-adv>div{padding:10px;border-radius:14px;background:#f8fafc;border:1px solid var(--line)}.compare-adv span{display:block;font-size:11px;color:var(--muted);line-height:1.3}.compare-adv b{display:block;font-size:17px;margin-top:4px}.compare-adv .positive b{color:#16825c}.compare-adv .blue b{color:var(--blue)}@media(max-width:600px){.benefit-cards{grid-template-columns:1fr}.compare-adv{grid-template-columns:1fr 1fr}.compare-adv>div:last-child{grid-column:span 2}}
+/* Polish pass: final UX */
+.mode-description{padding:0 8px;text-align:center}.mode-description.active{max-height:170px}.mode-description strong{color:var(--ink);letter-spacing:-.02em}.mode-description span{max-width:520px;margin:6px auto 0}
+.important-term{margin-top:18px;border:1px solid #c9d9ff;background:linear-gradient(135deg,#eaf1ff,#f8fbff);border-radius:20px;padding:16px 17px;box-shadow:0 10px 24px rgba(47,99,223,.08)}.important-term .important-kicker{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.important-term b{display:block;font-size:17px;margin-top:5px}.important-term p{margin:7px 0 0;color:#496080;font-size:14px;line-height:1.45}.important-term .transfer-mini{margin-top:10px;padding-top:10px;border-top:1px solid #d6e3ff;color:#496080;font-size:13px;line-height:1.45}
+.compare{background:linear-gradient(145deg,#eaf8f1,#f8fffb);border:1px solid #a9dfc6;box-shadow:0 10px 26px rgba(21,154,103,.08);overflow:hidden}.compare::before{content:none}.compare::after{content:none}.compare-list{gap:12px}.benefit-summary-title{font-size:20px;font-weight:900;letter-spacing:-.03em;color:#116b49}.benefit-summary-sub{font-size:13px;color:#4c6b5f;line-height:1.4;margin-top:4px}.benefit-summary-broker{margin-top:14px;padding:13px 14px;border:1px solid #cfe9db;border-radius:16px;background:rgba(255,255,255,.78)}.benefit-summary-broker span{display:block;color:#61746d;font-size:12px;line-height:1.35}.benefit-summary-broker b{display:block;margin-top:4px;font-size:24px;letter-spacing:-.04em;color:#172033}.benefit-linked{display:grid;grid-template-columns:1.2fr .8fr;gap:9px}.benefit-main,.benefit-percent-box,.benefit-time-box{border-radius:16px;padding:13px 14px}.benefit-main{background:#159a67;color:#fff}.benefit-main span,.benefit-percent-box span,.benefit-time-box span{display:block;font-size:12px;line-height:1.3}.benefit-main b{display:block;margin-top:5px;font-size:28px;letter-spacing:-.04em;overflow-wrap:anywhere}.benefit-percent-box{background:#d8f2e5;border:1px solid #b6e4cd;color:#116b49}.benefit-percent-box b,.benefit-time-box b{display:block;margin-top:5px;font-size:23px;letter-spacing:-.04em}.benefit-time-box{background:#fff;border:1px solid #cfe9db;color:#176448}.benefit-time-box{grid-column:1/-1}.benefit-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px}.benefit-card{width:100%;text-align:left;border:1px solid #cfe4d9;border-radius:15px;padding:12px;background:rgba(255,255,255,.82);cursor:pointer;transition:.18s;min-width:0}.benefit-card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(21,154,103,.09)}.benefit-card.warning{grid-column:1/-1}.benefit-card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.benefit-card-top b{font-size:13px;line-height:1.25}.benefit-card-top strong{font-size:16px;white-space:nowrap;letter-spacing:-.02em}.benefit-card span{display:block;color:#5b6d67;font-size:11px;line-height:1.35;margin-top:5px}.benefit-card small{display:block;color:#159a67;font-weight:800;font-size:10px;margin-top:7px}.benefit-optim-link{display:inline-flex;margin-top:7px;color:#116b49;font-size:11px;font-weight:850;text-decoration:underline}.benefit-period{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.period-metric{padding:11px;border-radius:14px;background:#fff;border:1px solid #cfe9db}.period-metric span{display:block;color:#64766f;font-size:11px;line-height:1.25}.period-metric b{display:block;margin-top:5px;font-size:15px;letter-spacing:-.025em;overflow-wrap:anywhere}.benefit-hint{font-size:12px;color:#527166;margin-top:2px}
+.chart-card.comparison-chart{background:#fff}.alternative-note{margin-top:12px;padding:11px 12px;border-radius:14px;background:#f6f8fb;border:1px solid var(--line);color:#5f6b7d;font-size:12px;line-height:1.4}.chart-insights{display:none!important}
+.result-anchor{scroll-margin-top:18px}.plan-details{margin-top:14px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}.plan-details summary{list-style:none;cursor:pointer;padding:14px 15px;font-weight:850;display:flex;justify-content:space-between;gap:12px}.plan-details summary::-webkit-details-marker{display:none}.plan-details summary:after{content:'⌄';color:var(--blue);font-size:18px;transition:.2s}.plan-details[open] summary:after{transform:rotate(180deg)}.plan-details-body{padding:0 14px 14px}.payment-table{margin-top:0}.widget-settings{cursor:pointer}.widget-caption b{display:block;font-size:17px;color:var(--blue2)}.widget-caption-accent{display:block;margin-top:2px;color:#496080;font-size:14px;font-weight:750}.widget-caption p{margin-top:7px}
+@media(max-width:600px){.benefit-linked{grid-template-columns:1fr}.benefit-breakdown{grid-template-columns:1fr}.benefit-card.warning{grid-column:auto}.benefit-period{grid-template-columns:1fr}.benefit-main b{font-size:25px}.benefit-summary-broker b{font-size:22px}}
+</style>
+
+<style>
+.result-info{margin-left:6px;vertical-align:middle}.compare-summary .broker{font-size:clamp(22px,4vw,34px)!important}.compare-adv{display:grid;grid-template-columns:1fr 1fr;gap:12px}.compare-adv>div{border:1px solid rgba(20,32,55,.08);border-radius:16px;padding:14px;background:#fff}.compare-adv .positive,.compare-adv .blue{background:linear-gradient(135deg,rgba(47,99,223,.08),rgba(47,99,223,.16));border-color:rgba(47,99,223,.22)}.compare-adv span{display:block;font-size:12px;color:#667085;margin-bottom:5px}.compare-adv b{font-size:24px;color:#2f63df}.benefit-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.benefit-card.warning{border:1px solid rgba(217,119,6,.28);background:rgba(217,119,6,.06)}.payment-explain,.payment-effect{font-size:12px;color:#667085;padding:8px 2px}.payment-effect{padding:0 2px 10px}.widget-preview-head{display:flex;align-items:center;justify-content:space-between}.widget-settings{border:0;background:rgba(47,99,223,.1);color:#2f63df;border-radius:10px;padding:6px 8px;cursor:pointer}.widget-mini small{display:block;color:#667085;margin-top:3px;font-size:11px}.capital-term-slider{margin-top:16px}@media(max-width:700px){.benefit-cards,.compare-adv{grid-template-columns:1fr}.compare-adv b{font-size:22px}}
+
+/* Final benefit layout hardening */
+.compare{overflow:hidden}
+.compare-list,.benefit-cards,.benefit-head,.compare-summary{min-width:0}
+.compare-summary .broker{font-size:22px;line-height:1.12;overflow-wrap:anywhere}
+.benefit-head{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:end;margin:14px 0 4px;padding:14px;border-radius:16px;background:linear-gradient(135deg,#effaf5,#f8fbff);border:1px solid #cfe9dc}
+.benefit-head>div{min-width:0}.benefit-head span{display:block;font-size:12px;color:var(--muted);line-height:1.25}.benefit-head b{display:block;margin-top:4px;font-size:18px;line-height:1.1;white-space:normal;overflow-wrap:anywhere}.benefit-positive b,.benefit-percent b{color:var(--green)}.benefit-percent{padding-left:10px;border-left:1px solid #cfe9dc}.benefit-time{padding-left:10px;border-left:1px solid #cfe9dc}
+.benefit-cards{grid-template-columns:1fr 1fr}.benefit-card{min-width:0;overflow:hidden}.benefit-card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.benefit-card-top b{min-width:0}.benefit-card-top strong{flex:0 1 auto;text-align:right;overflow-wrap:anywhere;font-size:18px}.benefit-card.warning{grid-column:1/-1;background:#fff7f7;border-color:#f2caca}.benefit-card.warning strong{color:#b54708}
+.restart-btn{width:100%;margin-top:12px;min-height:48px;border:1px solid #d7e1f4;border-radius:15px;background:transparent;color:#475467;font-weight:800;font-size:15px;cursor:pointer}.restart-btn:hover{background:#fff}
+.widget-caption{display:grid;gap:5px}.widget-caption-accent{display:block;color:var(--blue);font-weight:850;font-size:14px}.widget-caption p{margin:0;color:#60708a;line-height:1.45}
+@media(max-width:600px){.benefit-head{grid-template-columns:1fr 1fr}.benefit-time{grid-column:1/-1;padding-left:0;border-left:0;border-top:1px solid #cfe9dc;padding-top:10px}.benefit-cards{grid-template-columns:1fr}.benefit-card.warning{grid-column:auto}.chart-insights{grid-template-columns:1fr}.compare-summary .broker{font-size:20px}}
+
+/* Polish pass: final UX */
+.mode-description{padding:0 8px;text-align:center}.mode-description.active{max-height:170px}.mode-description strong{color:var(--ink);letter-spacing:-.02em}.mode-description span{max-width:520px;margin:6px auto 0}
+.important-term{margin-top:18px;border:1px solid #c9d9ff;background:linear-gradient(135deg,#eaf1ff,#f8fbff);border-radius:20px;padding:16px 17px;box-shadow:0 10px 24px rgba(47,99,223,.08)}.important-term .important-kicker{color:var(--blue);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase}.important-term b{display:block;font-size:17px;margin-top:5px}.important-term p{margin:7px 0 0;color:#496080;font-size:14px;line-height:1.45}.important-term .transfer-mini{margin-top:10px;padding-top:10px;border-top:1px solid #d6e3ff;color:#496080;font-size:13px;line-height:1.45}
+.compare{background:linear-gradient(145deg,#eaf8f1,#f8fffb);border:1px solid #a9dfc6;box-shadow:0 10px 26px rgba(21,154,103,.08);overflow:hidden}.compare::before{content:none}.compare::after{content:none}.compare-list{gap:12px}.benefit-summary-title{font-size:20px;font-weight:900;letter-spacing:-.03em;color:#116b49}.benefit-summary-sub{font-size:13px;color:#4c6b5f;line-height:1.4;margin-top:4px}.benefit-summary-broker{margin-top:14px;padding:13px 14px;border:1px solid #cfe9db;border-radius:16px;background:rgba(255,255,255,.78)}.benefit-summary-broker span{display:block;color:#61746d;font-size:12px;line-height:1.35}.benefit-summary-broker b{display:block;margin-top:4px;font-size:24px;letter-spacing:-.04em;color:#172033}.benefit-linked{display:grid;grid-template-columns:1.2fr .8fr;gap:9px}.benefit-main,.benefit-percent-box,.benefit-time-box{border-radius:16px;padding:13px 14px}.benefit-main{background:#159a67;color:#fff}.benefit-main span,.benefit-percent-box span,.benefit-time-box span{display:block;font-size:12px;line-height:1.3}.benefit-main b{display:block;margin-top:5px;font-size:28px;letter-spacing:-.04em;overflow-wrap:anywhere}.benefit-percent-box{background:#d8f2e5;border:1px solid #b6e4cd;color:#116b49}.benefit-percent-box b,.benefit-time-box b{display:block;margin-top:5px;font-size:23px;letter-spacing:-.04em}.benefit-time-box{background:#fff;border:1px solid #cfe9db;color:#176448}.benefit-time-box{grid-column:1/-1}.benefit-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px}.benefit-card{width:100%;text-align:left;border:1px solid #cfe4d9;border-radius:15px;padding:12px;background:rgba(255,255,255,.82);cursor:pointer;transition:.18s;min-width:0}.benefit-card:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(21,154,103,.09)}.benefit-card.warning{grid-column:1/-1}.benefit-card-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.benefit-card-top b{font-size:13px;line-height:1.25}.benefit-card-top strong{font-size:16px;white-space:nowrap;letter-spacing:-.02em}.benefit-card span{display:block;color:#5b6d67;font-size:11px;line-height:1.35;margin-top:5px}.benefit-card small{display:block;color:#159a67;font-weight:800;font-size:10px;margin-top:7px}.benefit-optim-link{display:inline-flex;margin-top:7px;color:#116b49;font-size:11px;font-weight:850;text-decoration:underline}.benefit-period{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.period-metric{padding:11px;border-radius:14px;background:#fff;border:1px solid #cfe9db}.period-metric span{display:block;color:#64766f;font-size:11px;line-height:1.25}.period-metric b{display:block;margin-top:5px;font-size:15px;letter-spacing:-.025em;overflow-wrap:anywhere}.benefit-hint{font-size:12px;color:#527166;margin-top:2px}
+.chart-card.comparison-chart{background:#fff}.alternative-note{margin-top:12px;padding:11px 12px;border-radius:14px;background:#f6f8fb;border:1px solid var(--line);color:#5f6b7d;font-size:12px;line-height:1.4}.chart-insights{display:none!important}
+.result-anchor{scroll-margin-top:18px}.plan-details{margin-top:14px;border:1px solid var(--line);border-radius:16px;background:#fff;overflow:hidden}.plan-details summary{list-style:none;cursor:pointer;padding:14px 15px;font-weight:850;display:flex;justify-content:space-between;gap:12px}.plan-details summary::-webkit-details-marker{display:none}.plan-details summary:after{content:'⌄';color:var(--blue);font-size:18px;transition:.2s}.plan-details[open] summary:after{transform:rotate(180deg)}.plan-details-body{padding:0 14px 14px}.payment-table{margin-top:0}.widget-settings{cursor:pointer}.widget-caption b{display:block;font-size:17px;color:var(--blue2)}.widget-caption-accent{display:block;margin-top:2px;color:#496080;font-size:14px;font-weight:750}.widget-caption p{margin-top:7px}
+@media(max-width:600px){.benefit-linked{grid-template-columns:1fr}.benefit-breakdown{grid-template-columns:1fr}.benefit-card.warning{grid-column:auto}.benefit-period{grid-template-columns:1fr}.benefit-main b{font-size:25px}.benefit-summary-broker b{font-size:22px}}
+</style>
+<style>
+/* Final polish: stable deduction toggle */
+.deduction-toggle{min-height:82px;margin:12px 0 4px;padding:10px 12px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:9px}
+.deduction-toggle-text{display:block;text-align:center;min-height:16px}.deduction-toggle-text b{font-size:13px;line-height:1.2}.deduction-toggle-text span{display:none!important}
+.deduction-switch{display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%;max-width:440px}.deduction-switch button{min-height:34px;border:1px solid rgba(255,255,255,.36);padding:7px 8px;background:rgba(255,255,255,.12);color:#fff;font-size:11px;line-height:1.15;text-align:center;white-space:normal}.deduction-switch button.active{background:#fff;color:#17633f;border-color:#fff;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+@media(max-width:390px){.deduction-switch button{font-size:10px;padding:7px 5px}}
+</style>
+<style>
+
+/* Final requested UX pass */
+.result-hero .goal-result-controls{display:block;margin:14px 0 4px}
+.goal-result-contribution{display:flex;flex-direction:column;justify-content:center;padding:12px 14px;border-radius:15px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25)}
+.goal-result-contribution span{font-size:12px;opacity:.8}.goal-result-contribution b{font-size:22px;line-height:1.2;margin-top:3px}
+.goal-result-frequency{margin-top:8px;padding:11px 13px;border-radius:15px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22)}
+.goal-result-frequency .goal-frequency-head b{font-size:12px}.goal-result-frequency .goal-frequency-value{color:#fff;font-size:12px}.goal-result-frequency input[type=range]{margin-top:8px;accent-color:#fff}.goal-result-frequency .goal-frequency-caption{font-size:10px;color:rgba(255,255,255,.72);margin-top:4px}
+.term-warning-inline{display:block;margin-top:6px;color:#8b5e0b;font-weight:800;font-size:12px}
+.planner-showcase{margin-top:18px;border:1px solid #d9e4ff;background:linear-gradient(145deg,#f5f8ff,#fff);border-radius:24px;padding:18px;display:flex;justify-content:center}
+.planner-showcase-head{width:100%;max-width:640px;text-align:center}.planner-showcase-head h4{margin:0;font-size:20px}.planner-showcase-head p{margin:6px 0 14px;color:var(--muted);font-size:13px;line-height:1.45}
+.iphone-preview{display:flex;justify-content:center;width:100%;margin-top:2px}.iphone-frame{width:min(100%,330px);padding:9px;border-radius:40px;background:#10141b;box-shadow:0 18px 50px rgba(15,24,38,.20);position:relative}.iphone-screen{border-radius:32px;background:#f8fbff;min-height:470px;padding:18px 16px 24px;overflow:hidden;position:relative}.iphone-dynamic-island{position:absolute;z-index:3;top:17px;left:50%;transform:translateX(-50%);width:112px;height:28px;border-radius:20px;background:#080a0d}.iphone-status{display:flex;justify-content:space-between;font-size:10px;font-weight:850;color:#24324a;padding:2px 3px 14px}.planner-app-label{color:var(--blue);font-size:11px;font-weight:850}.planner-app-title{font-size:27px;font-weight:900;letter-spacing:-.04em;margin-top:6px}.planner-app-progress{display:flex;justify-content:space-between;align-items:end;margin-top:22px}.planner-app-progress span{font-size:28px;font-weight:900;color:var(--blue)}.planner-app-progress b{font-size:12px;color:#526174}.planner-app-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.planner-app-cards>div{background:#fff;border:1px solid #dce6fb;border-radius:15px;padding:11px}.planner-app-cards span{display:block;font-size:10px;color:var(--muted)}.planner-app-cards b{display:block;font-size:13px;margin-top:4px}.planner-app-cards small{display:block;font-size:9px;color:var(--muted);margin-top:3px}.planner-app-foot{margin-top:12px;padding:10px 11px;border-radius:13px;background:#edf3ff;color:#496080;font-size:10px}.iphone-home{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);width:105px;height:5px;border-radius:99px;background:#fff;opacity:.9}
+@media(max-width:600px){.goal-result-contribution b{font-size:20px}.planner-showcase{padding:14px}.iphone-frame{width:min(100%,300px)}.iphone-screen{min-height:430px}.planner-app-title{font-size:24px}}
+@media(min-width:601px){
+  .compare .benefit-linked{display:block!important;width:100%!important;max-width:none!important;min-width:0!important}
+  .compare .benefit-main{width:100%!important;max-width:none!important;min-width:0!important}
+  .compare .benefit-sales-grid{display:grid;width:100%;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:stretch}
+  .compare .benefit-sales-primary,.compare .benefit-sales-metric{min-width:0;display:flex;flex-direction:column;justify-content:center}
+  .compare .benefit-sales-primary b{font-size:clamp(24px,2.15vw,38px);line-height:1.05;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:-.055em}
+  .compare .benefit-sales-metric b{font-size:clamp(21px,1.9vw,30px);line-height:1.1;white-space:nowrap}
+  .compare .benefit-main-details{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .compare .benefit-main-details button{min-width:0;min-height:74px}
+  .compare .benefit-main-details button span{min-width:0}
+  .compare .benefit-main-details button strong{font-size:clamp(13px,1.35vw,17px);white-space:nowrap;flex:0 0 auto}
+  .compare .benefit-period-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .compare .period-metric{min-width:0;min-height:82px;display:flex;flex-direction:column;justify-content:center}
+  .compare .period-metric b{font-size:clamp(17px,1.55vw,23px);white-space:nowrap}
+}
+
+</style>
+<style>
+/* Final targeted polish — late overrides */
+#screenResult .eyebrow{text-align:center!important;width:100%;}
+#screenResult .optimization>h4{text-align:center!important;width:100%;}
+.result-kicker .result-info{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;margin-left:6px;transform:translateY(-1px);}
+.goal-frequency-marks{display:none!important;}
+.goal-result-frequency input[type=range]{display:block;width:100%;margin:10px 0 0;min-height:38px;}
+.iphone-frame{width:min(100%,330px);border-radius:50px;aspect-ratio:9/19.5;}
+.iphone-screen{min-height:610px!important;padding-bottom:42px;}
+@media(max-width:600px){.iphone-screen{min-height:650px!important;height:calc(100% - 18px)}.iphone-frame{border-radius:44px}.iphone-home{bottom:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="shell">
+    <div class="top">
+      <div class="brand"><div class="logo">БКС • ИИС</div><div class="badge">Планирование</div></div>
+      <div class="progress"><i id="progressFill"></i></div>
+    </div>
+    <main class="content">
+      <section class="step active" id="start">
+        <div class="eyebrow">Персональный план</div>
+        <h1>Поймите, как ИИС может приблизить вашу цель</h1>
+        <p class="lead">Не нужно разбираться во всех условиях сразу. Выберите сценарий — мы зададим несколько вопросов и покажем понятный план в рублях.</p>
+        <div class="hero"><div class="illustration"><div class="illus-label">Ваша стратегия</div><div class="illus-title">Цель → план → результат</div><div class="illus-sub">Несколько вопросов — и вы увидите сумму, налоговую выгоду и план пополнений в рублях.</div></div></div>
+        <div class="link-row single-link">
+          <a class="link-btn primary" href="mybrokerx://Landing/6">Узнать больше про ИИС</a>
+        </div>
+        <div class="mode-switch" role="tablist" aria-label="Сценарий планирования">
+          <button type="button" class="mode-tab selected" id="modeTabCapital" role="tab" aria-selected="true" onclick="selectModePreview('capital')"><span class="mode-icon svg-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M7 36 18 24l8 6 15-18"/><path d="M32 12h9v9"/></svg></span><span>От капитала</span></button>
+          <button type="button" class="mode-tab" id="modeTabGoal" role="tab" aria-selected="false" onclick="selectModePreview('goal')"><span class="mode-icon svg-icon" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="16"/><circle cx="24" cy="24" r="9"/><path d="m24 24 13-13"/><path d="m31 11h6v6"/></svg></span><span>От цели</span></button>
+        </div>
+        <div class="mode-description active" id="modeDescCapital"><strong>Уже есть капитал</strong><span>Покажем будущий результат на ИИС и дополнительную выгоду от налоговых льгот.</span></div>
+        <div class="mode-description" id="modeDescGoal"><strong>Хочу накопить</strong><span>Укажите цель — рассчитаем удобный план пополнений и покажем, как ИИС помогает приблизить результат.</span></div>
+        <button type="button" class="btn btn-primary start-continue" id="startContinue" onclick="continueMode()">Продолжить</button>
+      </section>
+
+      <section class="step" id="capital-1">
+        <div class="eyebrow">От капитала · 1 из 5</div><h2>Сколько активов вы планируете разместить на ИИС?</h2><p class="lead">Это стартовый капитал — сумма, с которой начинается расчёт.</p>
+        <div class="form"><div class="field"><label for="capitalAmount">Стартовый капитал, ₽</label><input class="input" id="capitalAmount" type="text" inputmode="numeric" data-money="1" min="0" step="10000" data-desktop-step="100000" placeholder="Например, 5 000 000"></div></div>
+        <div class="nav"><button class="btn btn-secondary" onclick="backToStart()">Назад</button><button class="btn btn-primary" onclick="nextFromCapital1()">Далее</button></div>
+      </section>
+
+      <section class="step" id="goal-1">
+        <div class="eyebrow">От цели · 1 из 7</div><h2>Какая у вас цель?</h2><p class="lead">Выберите то, к чему хотите прийти. На расчёт суммы это не влияет — цель помогает сделать план понятнее.</p>
+        <div class="form"><div class="choice-list" id="goalChoices">
+          <div class="choice" onclick="selectGoal(this,'Пенсия')"><div class="choice-main"><div class="choice-name">Пенсия</div><div class="choice-meta">Долгосрочный капитал</div></div><div class="choice-rate">→</div></div>
+          <div class="choice" onclick="selectGoal(this,'Квартира')"><div class="choice-main"><div class="choice-name">Квартира</div><div class="choice-meta">Первоначальный взнос или полная стоимость</div></div><div class="choice-rate">→</div></div>
+          <div class="choice" onclick="selectGoal(this,'Авто')"><div class="choice-main"><div class="choice-name">Автомобиль</div><div class="choice-meta">Накопить к определённой дате</div></div><div class="choice-rate">→</div></div>
+          <div class="choice" onclick="selectGoal(this,'Путешествие')"><div class="choice-main"><div class="choice-name">Путешествие</div><div class="choice-meta">Большая сумма без кредитной нагрузки</div></div><div class="choice-rate">→</div></div>
+          <div class="choice" onclick="selectGoal(this,'Детям')"><div class="choice-main"><div class="choice-name">Детям</div><div class="choice-meta">Образование, жильё, стартовый капитал</div></div><div class="choice-rate">→</div></div>
+          <div class="choice" onclick="selectGoal(this,'Своя цель')"><div class="choice-main"><div class="choice-name">Своя цель</div><div class="choice-meta">Укажите собственную финансовую цель</div></div><div class="choice-rate">→</div></div>
+        </div><div class="field hidden" id="customGoalField" style="margin-top:18px"><label for="customGoalName">Опишите вашу цель</label><input class="input" id="customGoalName" type="text" maxlength="80" placeholder="Например, финансовая независимость"></div></div>
+        <div class="nav"><button class="btn btn-secondary" onclick="backToStart()">Назад</button><button class="btn btn-primary" onclick="nextFromGoal1()">Далее</button></div>
+      </section>
+
+      <section class="step" id="goal-2">
+        <div class="eyebrow">От цели · 2 из 7</div><h2>Сколько денег нужно к цели?</h2><p class="lead">Укажите сумму, которую хотите иметь на счёте к выбранному сроку.</p>
+        <div class="form"><div class="field"><label for="targetAmount">Сумма цели, ₽</label><input class="input" id="targetAmount" type="text" inputmode="numeric" data-money="1" min="0" step="10000" data-desktop-step="100000" placeholder="Например, 5 000 000"></div></div>
+        <div class="nav"><button class="btn btn-secondary" onclick="showStep('goal-1')">Назад</button><button class="btn btn-primary" onclick="nextFromGoal2()">Далее</button></div>
+      </section>
+
+      <section class="step" id="term">
+        <div class="eyebrow" id="termEyebrow">Срок · следующий шаг</div><h2>На какой срок планируете инвестировать?</h2><p class="lead">Выберите горизонт расчёта от 1 до 80 лет — исходите из своей цели и комфортного плана накоплений.</p><button type="button" class="important-term important-term-compact" onclick="openInfo('term')"><div class="important-kicker">Важно</div><b>Срок для получения льгот</b><span>Нажмите, чтобы посмотреть условия</span></button>
+        <div class="form">
+          <div class="field"><label>Горизонт расчёта</label><div class="range-wrap"><div class="range-top"><span class="helper" style="margin:0">Срок можно выбрать под вашу финансовую цель</span><span class="range-value" id="yearsValue">1 год</span></div><input id="years" type="range" min="1" max="80" step="1" value="5" oninput="updateYears(this.value)"></div></div>
+          <div class="transfer-card"><strong>Расчёт по условиям ИИС-3</strong><span>Калькулятор рассчитывает выгоду по условиям нового ИИС-3. Для старых счетов этот расчёт не применяется. Чтобы оценить выгоду по новым условиям и использовать льготы, старый счёт необходимо предварительно трансформировать.</span><a class="transfer-link" href="mybrokerx://Landing/iis_transformation">Узнать о трансформации →</a></div>
+        </div>
+        <div class="nav"><button class="btn btn-secondary" onclick="goTermBack()">Назад</button><button class="btn btn-primary" onclick="nextFromTerm()">Далее</button></div>
+      </section>
+      <section class="step" id="contributions">
+        <div class="eyebrow" id="contribEyebrow">От капитала · 3 из 5</div><h2 id="contribTitle">Планируете пополнять счёт регулярно?</h2><p class="lead" id="contribLead">Выберите частоту и сумму. Калькулятор учтёт каждое пополнение как новую инвестируемую сумму.</p>
+        <div class="form">
+          <div class="choice-list" id="frequencyChoices">
+            <div class="choice selected" onclick="selectFrequency(this,'monthly')"><div class="choice-main"><div class="choice-name">Каждый месяц</div><div class="choice-meta">Постепенное пополнение</div></div><div class="choice-rate">✓</div></div>
+            <div class="choice" onclick="selectFrequency(this,'quarterly')"><div class="choice-main"><div class="choice-name">Раз в квартал</div><div class="choice-meta">Четыре пополнения в год</div></div><div class="choice-rate">→</div></div>
+            <div class="choice" onclick="selectFrequency(this,'yearly')"><div class="choice-main"><div class="choice-name">Раз в год</div><div class="choice-meta">Одно крупное пополнение</div></div><div class="choice-rate">→</div></div>
+            <div class="choice" id="frequencyNone" onclick="selectFrequency(this,'none')"><div class="choice-main"><div class="choice-name">Не планирую</div><div class="choice-meta">Считаем только стартовый капитал</div></div><div class="choice-rate">→</div></div>
+          </div>
+          <div class="field" id="regularAmountField" style="margin-top:20px"><label for="regularAmount">Сумма пополнения, ₽</label><input class="input" id="regularAmount" type="text" inputmode="numeric" data-money="1" min="0" step="1000" data-desktop-step="100000" placeholder="Например, 30 000"></div>
+          <div class="note goal-frequency-note hidden" id="goalFrequencyNote">Калькулятор сам определит необходимую сумму пополнения после выбора доходности. Здесь вы выбираете только удобную периодичность.</div>
+        </div>
+        <div class="nav"><button class="btn btn-secondary" onclick="goContribBack()">Назад</button><button class="btn btn-primary" onclick="nextFromContrib()">Далее</button></div>
+      </section>
+
+      <section class="step" id="goal-initial">
+        <div class="eyebrow">От цели · 4 из 6</div><h2>Сколько вы внесёте при открытии счёта?</h2><p class="lead">Укажите стартовую сумму. Остаток до цели калькулятор распределит на регулярные пополнения.</p>
+        <div class="form"><div class="field"><label for="goalInitial">Первоначальный взнос, ₽</label><input class="input" id="goalInitial" type="text" inputmode="numeric" data-money="1" min="0" step="10000" data-desktop-step="100000" placeholder="Например, 400 000"></div></div>
+        <div class="note">Первоначальный взнос сразу начинает инвестироваться и учитывается в достижении вашей цели.</div>
+        <div class="nav"><button class="btn btn-secondary" onclick="showStep('term')">Назад</button><button class="btn btn-primary" onclick="nextFromGoalInitial()">Далее</button></div>
+      </section>
+      <section class="step" id="return">
+        <div class="eyebrow" id="returnEyebrow">От капитала · 4 из 5</div><h2>Какую доходность заложить в расчёт?</h2><p class="lead">Это не прогноз и не гарантия. Выберите пример доходности для расчёта или задайте своё значение.</p>
+        <div class="form"><div class="choice-list" id="returnChoices">
+          <div class="choice selected" onclick="selectReturn(this,20,'ПИФ БКС')"><div class="choice-main"><div class="choice-name">ПИФ БКС</div><div class="choice-meta">Пример для расчёта</div></div><div class="choice-rate">20%</div></div>
+          <div class="choice" onclick="selectReturn(this,15,'Облигации РФ · 5 лет')"><div class="choice-main"><div class="choice-name">Облигации РФ · 5 лет</div><div class="choice-meta">Пример для расчёта</div></div><div class="choice-rate">15%</div></div>
+          <div class="choice" onclick="selectReturn(this,null,'Своё значение')"><div class="choice-main"><div class="choice-name">Своё значение</div><div class="choice-meta">Укажите ожидаемую среднегодовую доходность</div></div><div class="choice-rate">%</div></div>
+        </div><div class="field hidden" id="customReturnField" style="margin-top:18px"><label for="customReturn">Ожидаемая доходность, % годовых</label><input class="input" id="customReturn" type="number" min="0" max="200" step="0.1" data-desktop-step="5" placeholder="Например, 18"></div></div>
+        <div class="note">Мы показываем выбранную доходность как допущение. Фактический результат зависит от результатов инвестирования, цен активов, реинвестирования купонов и дивидендов.</div>
+        <div class="nav"><button class="btn btn-secondary" onclick="goReturnBack()">Назад</button><button class="btn btn-primary" onclick="nextFromReturn()">Далее</button></div>
+      </section>
+
+      <section class="step" id="tax">
+        <div class="eyebrow" id="taxEyebrow">От капитала · 5 из 5</div><h2>Какая ставка НДФЛ у вас по основному виду дохода?</h2><p class="lead">Она нужна для расчёта вычета на внесённые деньги. Для инвестиционного дохода действует отдельный порядок налогообложения.</p>
+        <div class="form"><div class="field"><label for="taxRate">Ваша ставка НДФЛ <span class="info" onclick="openInfo('tax')">i</span></label><select class="select" id="taxRate"><option value="0">0% — нет подходящего НДФЛ</option><option value="13">13%</option><option value="15">15%</option><option value="18">18%</option><option value="20">20%</option><option value="22">22%</option></select></div></div>
+        <div class="warning"><div><b>Важно</b><span>Эта ставка применяется только к доходам, с которых удержан подходящий для вычета НДФЛ.</span></div><ul><li>Если подходящего НДФЛ нет — выберите <b>0%</b>. Вычет на взнос не будет учтён.</li><li>При наличии подходящего НДФЛ база для вычета — до <b>400 000 ₽ взносов в год</b>.</li></ul></div>
+        <div class="nav"><button class="btn btn-secondary" onclick="goTaxBack()">Назад</button><button class="btn btn-primary" onclick="calculate()">Показать мой план</button></div>
+      </section>
+
+      <section class="step" id="result">
+        <div class="eyebrow" style="text-align:center;width:100%;display:block">Ваш персональный результат</div><div class="result-hero"><div class="result-kicker" id="resultKicker">ИИС-3 · расчётный сценарий</div><div class="result-big" id="resultBig">—</div><div class="result-sub" id="resultSub">—</div><div class="pill" id="resultPill">Доходность — допущение</div></div>
+        <div class="compare"><div class="compare-list" id="compareList"></div></div>
+        <div class="chart-card comparison-chart"><div class="chart-title" style="text-align:center;width:100%;display:block">Сравнение вариантов инвестирования</div><div class="chart-sub">Сравниваем итог по одному плану вложений: ИИС-3, брокерский счёт и альтернативные способы размещения капитала с разной типичной доходностью и налоговыми условиями.</div><div class="chart-box"><canvas id="combinedChart"></canvas></div><div class="alternative-note"><div class="alternative-note-title">ИИС — счёт гибкого управления с гарантиями от государства</div><div class="alternative-note-insurance"><span class="insurance-icon" aria-hidden="true">✓</span><b>Средства на ИИС в компании БКС застрахованы.</b> <a href="https://bcs.ru/regulatory-table" target="_blank" rel="noopener">Подробнее →</a></div></div></div>
+        <div id="goalProgressWrap" class="hidden"></div><div id="goalPaymentsMount" class="hidden"></div>
+        <div class="cta"><h3 id="ctaTitle">Следующий шаг</h3><p id="ctaText" class="cta-text-hidden"></p><div class="cta-actions"><a class="btn btn-primary" id="topUpBtn" href="mybrokerx://Accounts/RefillFunds/IIS">Пополнить ИИС</a><a class="btn btn-secondary" id="openIisBtn" href="mybrokerx://OpenAccount/OpenIIS">Открыть ИИС</a></div><button type="button" class="restart-btn" onclick="restartCalculator()">Начать заново</button></div>
+        <div class="disclaimer">Расчёт ориентировочный и не является обещанием доходности. Он основан на выбранной среднегодовой доходности, правилах расчёта налоговой выгоды и указанных пополнениях. Фактический результат зависит от результатов инвестирования, цен активов и реинвестирования доходов. Для ИИС-3 право на льготы зависит от соблюдения условий законодательства.</div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeInfo()"><div class="modal-card"><h3 id="modalTitle">Информация</h3><p id="modalText"></p><button class="btn modal-close" onclick="closeInfo()">Понятно</button></div></div>
+
+<script>
+const state={mode:null,step:null,goal:'',frequency:'monthly',returnRate:20,returnName:'ПИФ БКС',charts:[],paymentPage:0,editReturn:false,editStep:null,reinvestDeduction:false};
+const $=id=>document.getElementById(id);
+const fmt=n=>Math.round(n||0).toLocaleString('ru-RU')+' ₽';
+const pct=n=>(n||0).toLocaleString('ru-RU',{maximumFractionDigits:1})+'%';
+const clamp=(n,a,b)=>Math.max(a,Math.min(b,n));
+function minTerm(year){return year<=2026?5:Math.min(10,year-2021)}
+function updateStepLabels(){const goal=state.mode==='goal';$('termEyebrow').textContent=goal?'От цели · 3 из 6':'От капитала · 2 из 5';$('contribEyebrow').textContent='От капитала · 3 из 5';$('returnEyebrow').textContent=goal?'От цели · 5 из 6':'От капитала · 4 из 5';$('taxEyebrow').textContent=goal?'От цели · 6 из 6':'От капитала · 5 из 5';$('contribTitle').textContent='Планируете пополнять счёт регулярно?';$('contribLead').textContent='Выберите частоту и сумму. Калькулятор учтёт каждое пополнение как новую инвестируемую сумму.';$('regularAmountField').classList.remove('hidden');$('goalFrequencyNote').classList.add('hidden');$('frequencyNone').classList.toggle('hidden',goal)}
+function showStep(id){document.querySelectorAll('.step').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');state.step=id;updateStepLabels();updateProgress();window.scrollTo({top:0,behavior:'smooth'})}
+function updateProgress(){if(state.step==='start'){ $('progressFill').style.width='8%';return} if(state.step==='result'){ $('progressFill').style.width='100%';return} const map=state.mode==='capital'?['capital-1','term','contributions','return','tax']:['goal-1','goal-2','term','goal-initial','return','tax']; const i=map.indexOf(state.step);$('progressFill').style.width=((i+1)/map.length*92)+'%';}
+function selectModePreview(mode){state.mode=mode;const ctaText=$('ctaText');if(ctaText){ctaText.textContent='';ctaText.innerHTML='';ctaText.classList.add('cta-text-hidden');}$('ctaTitle').textContent='Следующий шаг';if(mode==='goal'&&state.frequency==='none')state.frequency='monthly';document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('selected'));const tab=mode==='capital'?'modeTabCapital':'modeTabGoal';$(tab).classList.add('selected');$('modeTabCapital').setAttribute('aria-selected',mode==='capital');$('modeTabGoal').setAttribute('aria-selected',mode==='goal');$('modeDescCapital').classList.toggle('active',mode==='capital');$('modeDescGoal').classList.toggle('active',mode==='goal')}
+function continueMode(){if(!state.mode)selectModePreview('capital');showStep(state.mode==='capital'?'capital-1':'goal-1')}
+function backToStart(){state.mode=null;showStep('start')}
+function selectGoal(el,value){document.querySelectorAll('#goalChoices .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');state.goal=value;$('customGoalField').classList.toggle('hidden',value!=='Своя цель');if(value==='Своя цель')setTimeout(()=>$('customGoalName').focus(),60)}
+function nextFromGoal1(){if(!state.goal)return alert('Выберите цель');if(state.goal==='Своя цель'){const v=$('customGoalName').value.trim();if(!v)return alert('Укажите вашу цель');state.goal=v}continueAfterEdit('goal-2')}
+function nextFromGoal2(){if(!(moneyValue('targetAmount')>0))return alert('Укажите сумму цели');continueAfterEdit('term')}
+function moneyValue(id){return Number(String($(id)?.value||'').replace(/\s/g,'').replace(/[^0-9.-]/g,''))||0}
+function nextFromGoalInitial(){const initial=moneyValue('goalInitial'),target=moneyValue('targetAmount');if(initial<0)return alert('Укажите первоначальный взнос');if(initial>target)return alert('Первоначальный взнос не может быть больше цели');continueAfterEdit('return')}
+function nextFromCapital1(){if(!(moneyValue('capitalAmount')>0))return alert('Укажите стартовый капитал');showStep('term')}
+function updateTermOptions(){}
+function updateYears(v){const n=+v;$('yearsValue').textContent=n===1?'1 год':n<5?`${n} года`:n+' лет';updateTermOptions()}
+function nextFromTerm(){continueAfterEdit(state.mode==='goal'?'goal-initial':'contributions')}
+function goTermBack(){showStep(state.mode==='capital'?'capital-1':'goal-2')}
+function selectFrequency(el,val){document.querySelectorAll('#frequencyChoices .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');state.frequency=val;$('regularAmountField').classList.toggle('hidden',state.mode==='goal'||val==='none')}
+function nextFromContrib(){if(state.mode==='capital'&&state.frequency!=='none'&&!(moneyValue('regularAmount')>0))return alert('Укажите сумму пополнения');continueAfterEdit('return')}
+function goContribBack(){showStep('term')}
+function selectReturn(el,rate,name){document.querySelectorAll('#returnChoices .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');state.returnName=name;$('customReturnField').classList.toggle('hidden',rate!==null);if(rate!==null)state.returnRate=rate}
+function nextFromReturn(){if(!$('customReturnField').classList.contains('hidden')){const r=+$('customReturn').value;if(!(r>0&&r<=200))return alert('Укажите доходность от 0 до 200%');state.returnRate=r}continueAfterEdit('tax')}
+function goReturnBack(){showStep(state.mode==='goal'?'goal-initial':'contributions')}
+function goTaxBack(){showStep('return')}
+function openInfo(type){
+  const title=$('modalTitle'), text=$('modalText');
+  $('modal').classList.add('open');
+  const set=(t,h)=>{title.textContent=t;text.innerHTML=h};
+  if(type==='goalOvershoot'){
+    const r=state.result||{}, i=state.calc||{}; const excess=Math.max(0,(r.iisNet||0)-(i.target||0)); if(excess<=1){ closeModal(); return; }
+    set('Почему итоговая сумма выше цели?',`<strong>Цель превышена на ${fmt(excess)}</strong><br><br>Выбранный срок и доходность позволяют капиталу продолжать расти после достижения цели. В расчёте итог учитывает дальнейшее инвестирование стартовой суммы и всех запланированных пополнений до конца выбранного срока.`);
+  } else if(type==='resultTax'){
+    const deductionText=state.reinvestDeduction
+      ? `<strong>✓ Освобождение инвестиционного дохода</strong><br>До <b>30 млн ₽ инвестиционного дохода</b> не облагается налогом при соблюдении условий льготы.<br><br><strong>✓ Вычеты на взнос</strong><br>Вычеты за завершённый календарный год считаются полученными <b>в январе следующего года</b>, после чего направляются обратно на ИИС и начинают работать как новые пополнения с момента реинвестирования.`
+      : `<strong>✓ Освобождение инвестиционного дохода</strong><br>До <b>30 млн ₽ инвестиционного дохода</b> не облагается налогом при соблюдении условий льготы.<br><br><strong>✓ Вычет на взнос — отдельно</strong><br>По текущему выбору вычет поступает <b>на банковский счёт</b>, поэтому в финальную сумму на ИИС и её инвестиционный рост он не включается.`;
+    set('Что учтено в расчёте',`<strong>Что формирует финальную сумму</strong><br>${deductionText}<br><br><strong>Когда применяется льгота на доход</strong><br>Для освобождения инвестиционного дохода ИИС должен действовать не менее минимального предусмотренного срока.<br><br><strong>Если закрыть ИИС раньше</strong><br>Средства на ИИС <b>ликвидны</b>, а счёт можно закрыть в любой момент. При досрочном закрытии льгота на инвестиционный доход не применяется. При этом эффект от <b>отложенного налогообложения</b>, уже возникший за время инвестирования, сохраняется как отдельный экономический эффект.`);
+  } else if(type==='deduction'){
+    set('Как рассчитывается вычет на взнос?',`<strong>Когда возникает вычет</strong><br>В каждом календарном году, когда были фактические взносы и есть подходящий НДФЛ.<br><br><strong>Лимит для расчёта</strong><br>Максимальная база — <b>400 000 ₽ за год</b>. Взносы сверх этой суммы продолжают инвестироваться, но не увеличивают базу вычета.<br><br><strong>Когда и куда поступают деньги</strong><br>Вычет за завершённый календарный год отражается в расчёте как полученный <b>в январе следующего года</b> и поступает <b>на ваш банковский счёт</b>.`);
+  } else if(type==='incomeExemption'){
+    set('Освобождение инвестиционного дохода',`<strong>Что даёт льгота</strong><br>Инвестиционный доход на ИИС может освобождаться от налога в пределах применимого льготного лимита.<br><br><strong>Что показано в расчёте</strong><br>Это экономия на налоге с инвестиционного дохода, рассчитанная исходя из вашего финансового результата.<br><br><strong>Когда применяется</strong><br>Для льготы необходимо соблюсти минимальный срок действия ИИС-3 и другие предусмотренные условия.`);
+  } else if(type==='tax'){
+    set('Какие доходы подходят для вычета на взнос?',`<strong>Ваша ставка НДФЛ</strong><br>Выберите ставку по доходам, с которых НДФЛ удержан и которые можно использовать для вычета на взнос.<br><br><strong>Подходящие доходы</strong><br>• трудовой договор<br>• договор ГПХ<br>• ИП на ОСНО<br>• сдача недвижимости в аренду<br><br><strong>Что не учитывается</strong><br>Инвестиционный доход для этого вычета не используется.<br><br><strong>Если подходящего НДФЛ нет</strong><br>Выберите <b>0%</b> — вычет на взнос в расчёте не учитывается.<br><br><strong>Лимит взносов для вычета</strong><br>Максимальная база — <b>400 000 ₽ в календарный год</b>. Взносы сверх этой суммы продолжают инвестироваться, но не увеличивают вычет.`);
+  } else if(type==='iisTax'){
+    const r=state.result||{}; const gross=Math.max(0,r.grossProfit||0); const excess=Math.max(0,gross-30000000); const tax=finalIisTax(gross);
+    set('Как сделать разницу ещё больше?',`<strong>Какой доход не попадает под лимит</strong><br>Расчётный инвестиционный доход — <b>${fmt(gross)}</b>. Льготой покрывается до 30 000 000 ₽, поэтому <b>${fmt(excess)}</b> остаётся сверх лимита. Расчётный налог на эту часть — около <b>${fmt(tax)}</b>.<br><br><strong>За счёт чего возникает дополнительный потенциал</strong><br>Лимит применяется к каждому ИИС. При нескольких счетах можно увеличить объём дохода, который потенциально освобождается от налога.<br><br><strong>Как оптимизировать</strong><br>Можно рассмотреть до <b>3 ИИС-3</b>, распределить капитал между ними и закрывать счета в разные годы «лесенкой». Это может позволить задействовать до <b>90 млн ₽ льготного дохода</b> при соблюдении условий по каждому счёту.`);
+  } else if(type==='brokerTax'){
+    set('Почему капитал на брокерском счёте уменьшается из-за налога?','При инвестировании на брокерском счёте в упрощённом расчёте налог с положительного инвестиционного результата уменьшает сумму, которая остаётся работать дальше. На ИИС-3 при соблюдении условий такой налог не уплачивается ежегодно: сумма остаётся внутри капитала до момента прекращения договора. Поэтому возникает эффект отложенного налога — не отдельная льгота, а дополнительный эффект времени.');
+  } else if(type==='deferred'){
+    set('Что такое отложенный налог?',`<strong>Когда возникает эффект</strong><br>На брокерском счёте налог с инвестиционного дохода уменьшает капитал, который мог бы продолжать работать дальше.<br><br><strong>Как это работает на ИИС</strong><br>На ИИС-3 эта сумма не изымается из капитала ежегодно и продолжает участвовать в росте. Сам показатель отражает только дополнительный доход, заработанный благодаря тому, что налог дольше оставался в инвестициях — без повторного учёта самого налога.<br><br><strong>Если закрыть ИИС раньше минимального срока</strong><br>Льготы на ИИС будут потеряны, но уже полученный <b>эффект отложенного налогообложения сохраняется</b>: деньги до закрытия дольше находились в инвестициях и успели принести дополнительный доход.`);
+  } else {
+    set('Срок для получения льгот',`Ниже указан <b>минимальный срок действия ИИС-3 для получения налоговых льгот при открытии счёта в соответствующем году</b>.<br><br><strong>Минимальный срок ИИС-3 по году открытия</strong><br>• 2024–2026 — 5 лет<br>• 2027 — 6 лет<br>• 2028 — 7 лет<br>• 2029 — 8 лет<br>• 2030 — 9 лет<br>• с 2031 — 10 лет<br><br><strong>Что важно</strong><br>Это именно минимальный срок для получения льгот. Сам горизонт расчёта можно выбрать от 1 до 80 лет.<br><br><strong>При трансформации</strong><br>При трансформации старого ИИС в ИИС-3 в минимальный срок может быть зачтено до 3 лет.`);
+  }
+} 
+function previewCapitalTerm(v){if(!state.calc||state.mode!=='capital')return;const years=+v;const s=simulate({...state.calc,years});const diff=s.economicIIS-s.economicBS;const yLabel=years===1?'1 месяц':years<5?`${years} года`:`${years} лет`;const months=Math.round(years*12);const label=months<12?(months===1?'1 месяц':`${months} мес.`):yLabel;$('capitalOptimizationYearsValue').textContent=label;$('capitalOptimizationResult').innerHTML=`При сроке ${label}: итог на ИИС <b>${fmt(s.iisNet)}</b>, преимущество над тем же планом на брокерском счёте — <b>${fmt(Math.max(0,diff))}</b>.${months<60?` <span class="term-warning-inline">Для получения льгот необходимо закрывать счёт после достижения минимального срока <button type="button" onclick="openInfo('term')" aria-label="Подробнее о минимальном сроке">i</button></span>`:''}`;}
+function closeInfo(){$('modal').classList.remove('open')}
+function annualInvestmentTax(gain){if(gain<=0)return 0;return Math.min(gain,2400000)*.13+Math.max(gain-2400000,0)*.15}
+function finalIisTax(profit){return annualInvestmentTax(Math.max(0,profit-30000000))}
+function contributionDeduction(contrib,rate){return Math.min(Math.max(contrib,0),400000)*rate}
+function simulate({initial,years,rate,frequency,regular,taxRate,reinvestDeduction=false}){
+  const isWeekly=frequency==='weekly';
+  const periods=isWeekly?Math.round(years*52):Math.round(years*12);
+  const periodRate=isWeekly?Math.pow(1+rate/100,1/52)-1:Math.pow(1+rate/100,1/12)-1;
+  // iis — фактический ИИС с выбранным режимом вычета.
+  // iisCore — тот же инвестиционный путь без реинвестирования вычетов.
+  let iis=initial,iisCore=initial,bs=initial,totalContrib=initial;
+  const labels=[],iisSeries=[],bsSeries=[],contribSeries=[],taxBenefitSeries=[],contribDedSeries=[],incomeExemptionSeries=[],deferredSeries=[];
+  let cumDed=0,reinvestedDeduction=0,yearStartBs=bs,yearDeposits=0,yearContribs=0;
+  let pendingDeduction=0;
+  // Отложенный налог раскладываем на две части:
+  // deferredTaxPrincipal — сами ежегодно не изъятые суммы налога (НЕ считаются отдельной выгодой);
+  // deferredPool — те же суммы плюс заработанный ими инвестиционный доход.
+  // Карточка «Отложенный налог» показывает только deferredPool - deferredTaxPrincipal.
+  let deferredTaxPrincipal=0,deferredPool=0;
+
+  for(let p=1;p<=periods;p++){
+    const january=isWeekly?((p-1)%52===0):p%12===1;
+
+    iis*=1+periodRate;
+    iisCore*=1+periodRate;
+    bs*=1+periodRate;
+    // Сохранённый налог начинает приносить доход только после того,
+    // как налоговое событие прошлого года уже произошло.
+    deferredPool*=1+periodRate;
+
+    // Вычет за завершённый налоговый период становится доступен в январе следующего года.
+    if(january&&pendingDeduction>0){
+      const received=pendingDeduction;
+      cumDed+=received;
+      if(reinvestDeduction){iis+=received;reinvestedDeduction+=received;}
+      pendingDeduction=0;
+    }
+
+    const due=isWeekly ? true : p%(frequency==='monthly'?1:frequency==='quarterly'?3:frequency==='semiannual'?6:12)===0;
+    if(due){
+      iis+=regular;iisCore+=regular;bs+=regular;
+      totalContrib+=regular;yearDeposits+=regular;yearContribs+=regular;
+    }
+
+    const yearEnd=isWeekly?p%52===0:p%12===0;
+    if(yearEnd){
+      const completedYearIndex=isWeekly?p/52:p/12;
+      const deductionBase=yearContribs+(completedYearIndex===1?initial:0);
+      const yearDeduction=taxRate>0?contributionDeduction(deductionBase,taxRate):0;
+      pendingDeduction+=yearDeduction;
+
+      // Брокерский счёт ежегодно платит налог с результата именно этого года.
+      const taxableYearGain=Math.max(0,bs-yearStartBs-yearDeposits);
+      const annualTax=annualInvestmentTax(taxableYearGain);
+      bs-=annualTax;
+
+      // На ИИС эта сумма не изымается. В момент окончания года она лишь становится
+      // «отложенным налогом»; эффект реинвестирования равен нулю. Со следующего
+      // периода сумма начинает расти вместе с капиталом.
+      deferredTaxPrincipal+=annualTax;
+      deferredPool+=annualTax;
+
+      const grossCore=Math.max(0,iisCore-totalContrib);
+      const fullCoreNet=iisCore-finalIisTax(grossCore);
+      const currentIisNet=iis-finalIisTax(Math.max(0,iis-totalContrib-reinvestedDeduction));
+      const deductionBenefit=reinvestDeduction?Math.max(0,currentIisNet-fullCoreNet):cumDed;
+      const deferredEffect=Math.max(0,deferredPool-deferredTaxPrincipal);
+      const externalDeduction=reinvestDeduction?0:cumDed;
+      const totalBenefit=Math.max(0,(currentIisNet+externalDeduction)-bs);
+      // Остаток после независимых эффектов — уникальная выгода освобождения дохода.
+      const incomeTaxBenefit=Math.max(0,totalBenefit-deductionBenefit-deferredEffect);
+
+      labels.push('Год '+Math.round(completedYearIndex));
+      iisSeries.push(currentIisNet);
+      bsSeries.push(bs);
+      contribSeries.push(totalContrib);
+      taxBenefitSeries.push(deductionBenefit+incomeTaxBenefit+deferredEffect);
+      contribDedSeries.push(deductionBenefit);
+      incomeExemptionSeries.push(incomeTaxBenefit);
+      deferredSeries.push(deferredEffect);
+      yearStartBs=bs;yearDeposits=0;yearContribs=0;
+    }
+  }
+
+  const grossCore=Math.max(0,iisCore-totalContrib);
+  const fullCoreNet=iisCore-finalIisTax(grossCore);
+  const grossProfit=Math.max(0,iis-totalContrib-reinvestedDeduction);
+  const iisTax=finalIisTax(grossProfit);
+  const iisNet=iis-iisTax;
+  const deduction=cumDed;
+  const deductionBenefit=reinvestDeduction?Math.max(0,iisNet-fullCoreNet):deduction;
+  const externalDeduction=reinvestDeduction?0:deduction;
+  const economicIIS=iisNet+externalDeduction;
+  const economicBS=bs;
+  const totalBenefit=Math.max(0,economicIIS-economicBS);
+  const deferredEffect=Math.max(0,deferredPool-deferredTaxPrincipal);
+  const avoidedAtEnd=Math.max(0,totalBenefit-deductionBenefit-deferredEffect);
+
+  return {labels,iisSeries,bsSeries,contribSeries,taxBenefitSeries,contribDedSeries,incomeExemptionSeries,deferredSeries,
+    iisGross:iis,iisNet,bs,grossProfit,iisTax,bsTaxAtEnd:deferredTaxPrincipal,avoidedAtEnd,deferred:deferredEffect,
+    deferredTaxPrincipal,deduction,deductionBenefit,reinvestedDeduction,externalDeduction,economicIIS,economicBS,totalContrib};
+}
+function getInputs(){const years=+$('years').value;const initial=state.mode==='capital'?moneyValue('capitalAmount'):moneyValue('goalInitial');let regular=state.mode==='capital'?moneyValue('regularAmount'):0;if(state.frequency==='none')regular=0;const taxRate=+$('taxRate').value/100;return {years,initial,regular,taxRate,rate:state.returnRate,frequency:state.frequency,goal:state.goal,target:moneyValue('targetAmount')}}
+function solveGoalRegular(target,base,frequency){let lo=0,hi=Math.max(10000,target);for(let i=0;i<70;i++){const mid=(lo+hi)/2;const s=simulate({...base,frequency,regular:mid});if(s.iisNet<target)lo=mid;else hi=mid}return hi}
+function solveGoalMonthly(target,base){return solveGoalRegular(target,base,'monthly')}
+function monthsToTarget(target,initial,rate,frequency,regular,taxRate,mode){let lo=1,hi=960;for(let i=0;i<30;i++){const mid=Math.floor((lo+hi)/2);const years=mid/12;const s=simulate({initial,years,rate,frequency,regular,taxRate});const value=mode==='iis'?s.iisNet:s.bs;if(value>=target)hi=mid;else lo=mid+1}return hi}
+function calculate(){const input={...getInputs(),reinvestDeduction:state.reinvestDeduction};if(state.mode==='capital'&&!(input.initial>0))return alert('Укажите стартовый капитал');if(state.mode==='goal'&&!(input.target>0))return alert('Укажите сумму цели');
+  if(state.mode==='goal'){const base={...input,regular:0};const regular=solveGoalRegular(input.target,base,state.frequency);input.regular=regular;input.frequency=state.frequency;state.goalRegular=regular}
+  state.calc=input;const result=simulate(input);state.result=result;renderResult();showStep('result')}
+function setDeductionMode(reinvest){
+  if(!state.calc||state.reinvestDeduction===reinvest)return;
+  state.reinvestDeduction=reinvest;state.calc={...state.calc,reinvestDeduction:reinvest};
+  if(state.mode==='goal'){const base={...state.calc,regular:0,reinvestDeduction:reinvest};const regular=solveGoalRegular(state.calc.target,base,state.frequency);state.calc.regular=regular;state.goalRegular=regular;}
+  state.result=simulate(state.calc);renderResult();
+}
+function toggleDeductionReinvestment(){setDeductionMode(!state.reinvestDeduction)}
+function renderResult(){
+  const r=state.result,i=state.calc;
+  const diff=r.economicIIS-r.economicBS;
+  const diffPct=r.economicBS?diff/r.economicBS*100:0;
+  const years=i.years;
+  const yearsText=years===1?'1 год':years<5?`${years} года`:`${years} лет`;
+  const params=[];
+  const edit=(label,value,step)=>`<button type="button" class="result-param" onclick="editParameter('${step}')"><span>${label}</span><b>${value}</b></button>`;
+  params.push(edit('Срок',yearsText,'term'));
+  params.push(edit('Доходность',`${state.returnName} · ${pct(i.rate)}`,'return'));
+  if(state.mode==='goal'){
+    params.push(edit('Цель',`${state.goal||'Накопление'} · ${fmt(i.target)}`,'goal-2'));
+    params.push(edit('Стартовый взнос',fmt(i.initial),'goal-initial'));
+    params.push(edit('Периодичность',frequencyLabel(i.frequency),'result-frequency'));
+  } else {
+    params.push(edit('Стартовый капитал',fmt(i.initial),'capital-1'));
+    params.push(edit('Пополнения',i.regular?`${fmt(i.regular)} ${frequencyWord(i.frequency)}`:'Не планируются','contributions'));
+  }
+  params.push(edit('НДФЛ для вычета',i.taxRate?`${Math.round(i.taxRate*100)}%`:'0% — нет подходящего НДФЛ','tax'));
+  $('resultKicker').innerHTML='Финальная сумма на ИИС <span class="info result-info" onclick="openInfo(\'resultTax\')">i</span>';
+  const goalOvershoot=state.mode==='goal'&&i.target&&r.iisNet>i.target+1;
+  const resultBig=$('resultBig');
+  resultBig.textContent=fmt(r.iisNet);
+  resultBig.classList.toggle('clickable',!!goalOvershoot);
+  resultBig.onclick=goalOvershoot?()=>openInfo('goalOvershoot'):null;
+  resultBig.setAttribute('role',goalOvershoot?'button':'presentation');
+  resultBig.setAttribute('tabindex',goalOvershoot?'0':'-1');
+  $('resultSub').innerHTML=state.mode==='goal'
+    ? `На конец выбранного срока — ${yearsText}. Итог рассчитан с учётом выбранного плана пополнений и инвестирования.`
+    : `На конец выбранного срока — ${yearsText}. Итог рассчитан с учётом всех запланированных пополнений и инвестирования.`;
+  const oldHint=document.getElementById('resultAmountHint');
+  if(oldHint)oldHint.remove();
+  if(goalOvershoot){
+    const hint=document.createElement('div'); hint.id='resultAmountHint'; hint.className='result-amount-hint show'; hint.textContent='Нажмите на финальную сумму, чтобы узнать, почему она выше цели.'; resultBig.insertAdjacentElement('afterend',hint);
+  }
+  const goalContributionControl=state.mode==='goal'?`<div class="goal-result-controls"><div class="goal-result-contribution"><span>Расчётный взнос</span><b><em>${fmt(i.regular)}</em> ${frequencyWord(i.frequency)}</b></div><div class="goal-result-frequency"><div class="goal-frequency-caption goal-frequency-caption-top">Выберите удобный ритм</div><input id="resultGoalFreqSlider" type="range" min="0" max="4" step="1" value="${frequencyIndex(i.frequency)}" oninput="changeGoalFrequency(this.value)"><div class="goal-frequency-head goal-frequency-head-bottom"><b>Частота пополнения</b><span class="goal-frequency-value">${frequencyLabel(i.frequency)}</span></div></div></div>`:'';
+  const deductionToggle=i.taxRate>0?`<div class="deduction-toggle"><div class="deduction-toggle-text"><b>Вычет на взнос</b></div><div class="deduction-switch"><button type="button" class="${!state.reinvestDeduction?'active':''}" onclick="setDeductionMode(false)">Получать на банковский счёт</button><button type="button" class="${state.reinvestDeduction?'active':''}" onclick="setDeductionMode(true)">Реинвестировать на ИИС</button></div></div>`:'';
+  $('resultPill').innerHTML=`${goalContributionControl}<div class="params-heading params-heading-centered">Введённые параметры · для изменения расчёта нажмите на карточку</div><div class="result-params">${params.join('')}</div>${deductionToggle}`;
+
+  const rows=[];
+  const bsMonths=state.mode==='goal'?monthsToTarget(i.target,i.initial,i.rate,i.frequency,i.regular,i.taxRate,'bs'):0;
+  const iisMonths=state.mode==='goal'?monthsToTarget(i.target,i.initial,i.rate,i.frequency,i.regular,i.taxRate,'iis'):0;
+  const saved=state.mode==='goal'?Math.max(0,bsMonths-iisMonths):0;
+  const totalBenefit=Math.max(0,diff);
+  const earned=Math.max(0,r.iisNet-r.totalContrib);
+  const optimizationHint=r.grossProfit>30000000;
+  rows.push(`<div class="benefit-summary-title benefit-summary-title-centered">Итоговая выгода ИИС</div>`);
+  rows.push(`<div class="benefit-summary-broker"><span>По сравнению с тем же планом инвестирования на брокерском счёте</span><b>${fmt(r.economicBS)}</b></div>`);
+  rows.push(`<div class="benefit-linked"><div class="benefit-main benefit-main-expanded"><div class="benefit-sales-grid"><div class="benefit-sales-primary"><span>С ИИС больше на</span><b>+${fmt(totalBenefit)}</b></div><div class="benefit-sales-metric ${state.mode==='capital'?'benefit-sales-metric-wide':''}"><span>Разница в результате</span><b>${pct(diffPct)}</b>${optimizationHint?`<button type="button" class="benefit-optim-link" onclick="openInfo('iisTax')">Разница может быть больше, узнать как?</button>`:''}</div>${state.mode==='goal'?`<div class="benefit-sales-metric benefit-sales-time"><span>Экономия по сроку</span><b>${formatMonths(saved)}</b></div>`:''}</div><div class="benefit-main-details"><button type="button" onclick="openInfo('deduction')"><span>Вычет на взнос<small>Подробнее ›</small></span><strong>+${fmt(r.deductionBenefit)}</strong></button><button type="button" onclick="openInfo('incomeExemption')"><span>Освобождение дохода<small>Подробнее ›</small></span><strong>+${fmt(r.avoidedAtEnd)}</strong></button><button type="button" onclick="openInfo('deferred')"><span>Отложенный налог<small>Подробнее ›</small></span><strong>+${fmt(r.deferred)}</strong></button></div><div class="benefit-period benefit-period-inline benefit-period-two"><div class="period-metric"><span>Внесено за весь срок</span><b>${fmt(r.totalContrib)}</b></div><div class="period-metric"><span>Заработано</span><b>${fmt(earned)}</b></div></div></div></div>`);
+
+  if(state.mode==='capital'){
+    $('goalPaymentsMount').classList.add('hidden');
+    $('goalPaymentsMount').innerHTML='';
+    $('goalProgressWrap').classList.remove('hidden');
+    $('goalProgressWrap').innerHTML=`<div class="optimization capital-term-slider"><h4>Посмотрите, как срок влияет на результат</h4><p>Сдвиньте ползунок в любую сторону, чтобы увидеть итог за выбранный срок при сохранении текущего капитала, доходности и пополнений.</p><div class="optimization-slider"><div class="goal-frequency-head"><b>Срок инвестирования</b><span class="goal-frequency-value" id="capitalOptimizationYearsValue">${yearsText}</span></div><input id="capitalOptimizationYearsSlider" type="range" min="1" max="80" step="1" value="${i.years}" oninput="previewCapitalTerm(this.value)"><div class="optimization-result" id="capitalOptimizationResult">Покажем изменение итоговой суммы и преимущества ИИС при увеличении срока.${i.years<5?` <span class="term-warning-inline">Для получения льгот необходимо закрывать счёт после достижения минимального срока <button type="button" onclick="openInfo('term')" aria-label="Подробнее о минимальном сроке">i</button></span>`:''}</div></div></div>`;
+  } else if(state.mode==='goal'){
+    const progress=Math.max(0,Math.min(100,i.target?i.initial/i.target*100:0));
+    const freqLabel=frequencyLabel(i.frequency), periodWord=frequencyWord(i.frequency);
+    const events=paymentEvents(i.frequency,i.regular,i.years);
+    const next=events[0]?.amount||0;
+    $('goalProgressWrap').classList.remove('hidden');
+    $('goalProgressWrap').innerHTML=`<div class="planner-showcase exact-planner-showcase"><div class="planner-showcase-head"><h4>Планер в приложении</h4><p>Наглядный виджет внутри раздела ИИС: цель, прогресс, ближайшее пополнение и срок до цели.</p></div><div class="iphone-preview"><div class="iphone-device exact-app-device"><div class="iphone-frame exact-app-frame"><div class="exact-app-screen bcs-mock-screen"><div class="mock-status"><b>9:41</b><div class="mock-status-right"><span class="mock-signal"><i></i><i></i><i></i><i></i></span><span>LTE</span><span class="mock-battery"><i></i></span></div></div><div class="mock-top"><span class="mock-back">‹</span><span class="mock-account">ИИС 2758242/25⌄</span></div><div class="mock-title">ИИС (тип 1/2)</div><div class="mock-subtitle">Открыт 2 года 11 месяцев <span>i</span></div><div class="mock-deduction"><div class="mock-deduction-title">Вычет на взнос за 2026</div><div class="mock-deduction-body"><div class="mock-deduction-copy"><div><span>Уже внесено <em>i</em></span><b>300 000 ₽</b></div><div><span>Внесите еще <em>i</em></span><b>100 000 ₽</b></div><div><span>Макс. вычет <em>i</em></span><b>52 000 ₽</b></div></div><div class="mock-ring"><div><span>Накопили</span><b>39 000 ₽</b></div></div></div></div><div class="planner-onboarding exact-onboarding"><span>Планируйте цель и следите за прогрессом</span><b>×</b></div><div class="planner-widget bcs-planner-widget exact-planner-widget"><div class="planner-widget-head"><div><small>Планер · ваша цель</small><strong>${state.goal||'Ваша цель'}</strong></div><span class="planner-gear exact-gear" aria-hidden="true">⚙</span></div><div class="planner-widget-title"><span>Прогресс</span><b>${progress.toFixed(1)}%</b></div><div class="bar planner-bar"><i style="width:${progress}%"></i></div><div class="planner-game exact-game"><span>✓</span><div><b>Отличный темп</b><small>Вы идёте по плану</small></div></div><div class="planner-app-cards exact-mini-cards"><div><span>Ближайший взнос</span><b>${fmt(i.regular)}</b></div><div><span>До цели</span><b>${yearsText}</b></div></div></div><div class="exact-autopay"><span class="exact-autopay-icon">▣</span><div><b>Создать автопополнение</b><small>Чтобы не забыть копить</small></div><strong>›</strong></div><div class="mock-purple-link"><span>Вычеты: какие бывают и как получить</span><b>›</b></div><div class="mock-list-card"><span class="mock-list-icon">◌</span><div><small>Вычет на взнос за все время</small><b>129 804 ₽</b></div><strong>›</strong></div><div class="mock-list-card mock-list-card-fade"><span class="mock-list-icon dark"></span><div><b>Получайте больше вычетов</b><small>Трансформируйте счет в ИИС-3</small></div><strong>›</strong></div></div></div></div></div><div class="optimization"><h4 style="text-align:center;width:100%;display:block">Можно изменить нагрузку</h4><p>Срок и размер пополнения связаны: выберите любой срок — от 1 месяца до 80 лет — и мы сразу покажем, какое пополнение потребуется для той же цели.</p><div class="optimization-slider"><div class="goal-frequency-head"><b>Срок до цели</b><span class="goal-frequency-value" id="optimizationYearsValue">${yearsText}</span></div><input id="optimizationYearsSlider" type="range" min="1" max="960" step="1" value="${Math.round(i.years*12)}" oninput="previewGoalOptimization(this.value)"><div class="optimization-result" id="optimizationResult">${i.regular<1?`Дополнительные взносы не требуются: стартовый капитал и выбранная доходность уже позволяют достичь цели. Без новых пополнений итог через ${yearsText} составит <b>${fmt(simulate({...i,regular:0}).iisNet)}</b>.`:`Для цели ${fmt(i.target)} за ${yearsText} потребуется <b>${fmt(i.regular)} ${periodWord}</b>.`}${i.years<5?` <span class="term-warning-inline">Для получения льгот необходимо закрывать счёт после достижения минимального срока <button type="button" onclick="openInfo('term')" aria-label="Подробнее о минимальном сроке">i</button></span>`:''}</div></div></div>`;
+    $('goalPaymentsMount').classList.remove('hidden');
+    $('goalPaymentsMount').innerHTML=`<div class="payments"><div class="chart-title">Полный план пополнений</div><div class="chart-sub">Скачайте подробный план: как каждое пополнение влияет на капитал и выгоды. Это ваш график — как по кредиту, только наоборот.</div><div class="payments-actions"><button class="download-btn" onclick="downloadPlan()">Скачать полный план Excel</button></div><details class="plan-details"><summary>Показать план пополнений</summary><div class="plan-details-body"><div id="paymentPager"></div></div></details></div>`;
+    state.paymentPage=0; renderPaymentPager();
+    $('ctaTitle').textContent='С ИИС ваша цель ближе';
+    $('ctaText').classList.remove('cta-text-hidden');
+    $('ctaText').textContent=i.regular>0?`Ваш план: пополняйте ИИС на ${fmt(i.regular)} ${periodWord} и инвестируйте каждое пополнение.`:'Стартовой суммы достаточно для цели при выбранной доходности. Дополнительные пополнения могут сделать итог ещё больше.';
+  } else {
+    $('goalPaymentsMount').classList.add('hidden');
+    $('goalPaymentsMount').innerHTML='';
+    $('goalProgressWrap').classList.add('hidden');
+    $('ctaTitle').textContent='Следующий шаг';
+    $('ctaText').innerHTML='';
+    $('ctaText').textContent='';
+    $('ctaText').classList.add('cta-text-hidden');
+  }
+  $('compareList').innerHTML=rows.join('');
+  drawCharts();
+}
+function formatMonths(m){const y=Math.floor(m/12),mo=m%12;return y?`${y} г. ${mo} мес.`:`${mo} мес.`}
+function frequencyLabel(f){return f==='weekly'?'Каждую неделю':f==='monthly'?'Каждый месяц':f==='quarterly'?'Раз в квартал':f==='semiannual'?'Раз в полгода':'Раз в год'}
+function frequencyWord(f){return f==='weekly'?'в неделю':f==='monthly'?'в месяц':f==='quarterly'?'раз в квартал':f==='semiannual'?'раз в полгода':'раз в год'}
+function nextContributionLabel(f){return f==='weekly'?'ближайшая неделя':f==='monthly'?'следующий месяц':f==='quarterly'?'следующий квартал':f==='semiannual'?'через полгода':'в следующем году'}
+function frequencyIndex(f){return {weekly:0,monthly:1,quarterly:2,semiannual:3,yearly:4}[f]??1}
+function indexFrequency(v){return ['weekly','monthly','quarterly','semiannual','yearly'][+v]||'monthly'}
+function changeGoalFrequency(v){if(state.mode!=='goal'||!state.calc)return;const f=indexFrequency(v);state.frequency=f;const base={...state.calc,frequency:f,regular:0};const regular=solveGoalRegular(state.calc.target,base,f);state.calc.regular=regular;state.calc.frequency=f;state.goalRegular=regular;state.result=simulate(state.calc);renderResult();} 
+function paymentEvents(frequency,regular,years){const totalPeriods=Math.round(years*(frequency==='weekly'?52:12));const interval=frequency==='weekly'?1:frequency==='monthly'?1:frequency==='quarterly'?3:frequency==='semiannual'?6:12;const events=[];let total=0;if(frequency==='weekly'){for(let w=1;w<=totalPeriods;w++){total+=regular;events.push({month:w/52*12,period:`Неделя ${w}`,amount:regular,total})}}else{for(let m=interval;m<=Math.round(years*12);m+=interval){total+=regular;events.push({month:m,period:`Месяц ${m}`,amount:regular,total})}}return events}
+function renderPaymentPager(){
+  const i=state.calc;if(!i||state.mode!=='goal'||!$('paymentPager'))return;
+  const events=paymentEvents(i.frequency,i.regular,i.years);const pageSize=5;const pages=Math.max(1,Math.ceil(events.length/pageSize));
+  state.paymentPage=Math.min(state.paymentPage||0,pages-1);const page=state.paymentPage;const slice=events.slice(page*pageSize,(page+1)*pageSize);
+  const rows=['<div class="payment-table">','<div class="payment-line"><span>Период</span><span>Пополнение</span><b>Итог на дату</b></div>'];
+  slice.forEach(e=>{const s=simulate({...i,years:Math.min(i.years,e.month/12),regular:i.regular,frequency:i.frequency});const gain=Math.max(0,s.iisNet-s.totalContrib);rows.push(`<div class="payment-line"><span>${e.period}</span><span>${fmt(e.amount)}</span><b>${fmt(s.economicIIS)}</b></div><div class="payment-effect">Взносы ${fmt(s.totalContrib)} · инвестиционный рост ${fmt(gain)} · преимущества ИИС ${fmt(Math.max(0,s.economicIIS-s.economicBS))}</div>`)});
+  rows.push('</div>');
+  $('paymentPager').innerHTML='<div class="payment-explain">«Итог на дату» — сколько стоит весь капитал к этому периоду: внесённые деньги, доход от инвестирования и применимые преимущества ИИС.</div>'+rows.join('')+`<div class="payment-pager"><button class="pager-btn" ${page===0?'disabled':''} onclick="changePaymentPage(-1)">←</button><div class="pager-status">${page+1} из ${pages} · ${events.length} пополнений</div><button class="pager-btn" ${page===pages-1?'disabled':''} onclick="changePaymentPage(1)">→</button></div>`;
+}
+function changePaymentPage(delta){state.paymentPage=Math.max(0,(state.paymentPage||0)+delta);renderPaymentPager()}
+function downloadPlan(){
+  const i=state.calc;if(!i||state.mode!=='goal')return;
+  if(typeof XLSX==='undefined'){alert('Не удалось загрузить модуль Excel. Проверьте подключение к интернету и повторите попытку.');return;}
+  const final=state.result,wb=XLSX.utils.book_new();
+  const money=n=>Math.round(n||0),modeLabel=state.reinvestDeduction?'Реинвестировать на ИИС после получения в январе':'Получать на банковский счёт';
+  const summary=[
+    ['ПОЛНЫЙ ПЛАН ПОПОЛНЕНИЙ ИИС'],['Персональный финансовый план'],[],
+    ['ПАРАМЕТРЫ РАСЧЁТА','ЗНАЧЕНИЕ'],
+    ['Цель',money(i.target)],['Стартовый взнос',money(i.initial)],['Регулярное пополнение',money(i.regular)],['Периодичность',frequencyLabel(i.frequency)],['Срок инвестирования',`${i.years} лет`],['Годовая доходность',i.rate/100],['Ставка НДФЛ для вычета',i.taxRate],['Режим вычета на взнос',modeLabel],[],
+    ['ИТОГ ЗА ВЕСЬ СРОК','ЗНАЧЕНИЕ'],
+    ['Всего внесено на ИИС',money(final.totalContrib)],
+    ['Итоговая сумма на ИИС',money(final.iisNet)],
+    ['Инвестиционный доход',money(Math.max(0,final.iisNet-final.totalContrib-final.reinvestedDeduction))],
+    ['Получено вычетов на взнос',money(final.deduction)],
+    ['Освобождение инвестиционного дохода от налога',money(final.avoidedAtEnd)],
+    ['Эффект отложенного налога',money(final.deferred)],
+    ['Итоговый экономический эффект',money(final.economicIIS-final.totalContrib)],
+    ['Общий финансовый результат',money(final.economicIIS)],[],
+    ['КАК ЧИТАТЬ РАСЧЁТ'],
+    ['Вычет на взнос рассчитывается только по фактически внесённым средствам завершённого календарного года: база ограничена 400 000 ₽ в год. Получение отражается в январе следующего года.'],
+    [state.reinvestDeduction?'Полученный в январе вычет сразу направляется на ИИС и начинает приносить инвестиционный доход с момента реинвестирования.':'Полученный в январе вычет поступает на банковский счёт и не считается частью капитала ИИС.'],
+    ['Эффект отложенного налога — накопленный результат годового налога, который на брокерском счёте был удержан по завершении года, а на ИИС сохранился в капитале и с начала следующего года продолжил инвестироваться.']
+  ];
+  const plan=[['Период','Пополнение, ₽','Всего внесено, ₽','Инвестиционный доход, ₽','Вычет на взнос, ₽','Освобождение дохода от налога, ₽','Эффект отложенного налога, ₽','Итоговый экономический эффект, ₽','Капитал на ИИС, ₽']];
+  const totalMonths=Math.round(i.years*12);
+  const interval=i.frequency==='weekly'?null:(i.frequency==='monthly'?1:i.frequency==='quarterly'?3:i.frequency==='semiannual'?6:12);
+  let prevDeduction=0;
+  for(let month=1;month<=totalMonths;month++){
+    const snapshot=simulate({...i,years:month/12,regular:i.regular,frequency:i.frequency});
+    let contribution=0;
+    if(i.frequency==='weekly'){
+      contribution=i.regular*(52/12);
+    } else if(interval&&month%interval===0) contribution=i.regular;
+    const receivedNow=Math.max(0,snapshot.deduction-prevDeduction);
+    prevDeduction=snapshot.deduction;
+    const investmentIncome=Math.max(0,snapshot.iisNet-snapshot.totalContrib-snapshot.reinvestedDeduction);
+    const economicEffect=Math.max(0,snapshot.economicIIS-snapshot.totalContrib);
+    const exemptionCell=snapshot.grossProfit>=30000000?'По льготе достигнут лимит.':money(snapshot.avoidedAtEnd);
+    plan.push([`Месяц ${month}`,money(contribution),money(snapshot.totalContrib),money(investmentIncome),money(receivedNow),exemptionCell,money(snapshot.deferred),money(economicEffect),money(snapshot.iisNet)]);
+  }
+  const ws1=XLSX.utils.aoa_to_sheet(summary),ws2=XLSX.utils.aoa_to_sheet(plan);
+  ws1['!cols']=[{wch:62},{wch:42}];
+  ws2['!cols']=[{wch:14},{wch:17},{wch:19},{wch:20},{wch:18},{wch:30},{wch:23},{wch:28},{wch:20}];
+  ws1['!freeze']={xSplit:0,ySplit:4};ws2['!freeze']={xSplit:0,ySplit:1};
+  ws1['!merges']=[XLSX.utils.decode_range('A1:B1'),XLSX.utils.decode_range('A2:B2'),XLSX.utils.decode_range('A24:B24'),XLSX.utils.decode_range('A25:B25'),XLSX.utils.decode_range('A26:B26'),XLSX.utils.decode_range('A27:B27')];
+  const titleStyle={font:{bold:true,sz:16,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'1F55CF'}},alignment:{horizontal:'left',vertical:'center',wrapText:true}};
+  const sectionStyle={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'159A67'}},alignment:{vertical:'center',wrapText:true}};
+  const headerStyle={font:{bold:true,color:{rgb:'FFFFFF'}},fill:{fgColor:{rgb:'2F63DF'}},alignment:{horizontal:'center',vertical:'center',wrapText:true}};
+  const noteStyle={font:{color:{rgb:'475467'},italic:true},alignment:{vertical:'top',wrapText:true}};
+  ws1['A1'].s=titleStyle;ws1['A2'].s={font:{italic:true,color:{rgb:'667085'}},alignment:{vertical:'center'}};
+  ['A4','B4'].forEach(a=>ws1[a].s=headerStyle);
+  if(ws1['B12'])ws1['B12'].s={alignment:{vertical:'center',wrapText:true}};
+  ['A14','B14','A24'].forEach(a=>{if(ws1[a])ws1[a].s=sectionStyle});
+  ['A25','A26','A27'].forEach(a=>{if(ws1[a])ws1[a].s=noteStyle});
+  for(let c=0;c<9;c++){const cell=XLSX.utils.encode_cell({r:0,c});if(ws2[cell])ws2[cell].s=headerStyle;}
+  ws1['!rows']=[{hpt:30},{hpt:22},null,{hpt:26},...Array(19).fill({hpt:20}),{hpt:42},{hpt:46},{hpt:46}];
+  ws1['!rows'][10]={hpt:26};ws1['!rows'][11]={hpt:46};
+  ws2['!rows']=[{hpt:42}];
+  ['B5','B6','B7','B15','B16','B17','B18','B19','B20','B21','B22'].forEach(a=>{if(ws1[a])ws1[a].z='#,##0 [$₽-ru-RU]'});
+  if(ws1['B10'])ws1['B10'].z='0.0%';if(ws1['B11'])ws1['B11'].z='0%';
+  for(let r=1;r<plan.length;r++){for(let c=1;c<=8;c++){const cell=XLSX.utils.encode_cell({r,c});if(ws2[cell])ws2[cell].z='#,##0 [$₽-ru-RU]';}}
+  XLSX.utils.book_append_sheet(wb,ws1,'Итог');XLSX.utils.book_append_sheet(wb,ws2,'План пополнений');
+  XLSX.writeFile(wb,'polnyy-plan-popolneniy-iis.xlsx');
+}
+function goalOptimization(target,initial,rate,taxRate,currentYears){const candidates=[currentYears,Math.min(80,currentYears+2),Math.min(80,currentYears+5),80].filter((v,i,a)=>v>=currentYears&&a.indexOf(v)===i);return candidates.map(years=>({years,monthly:solveGoalRegular(target,{initial,years,rate,frequency:'monthly',regular:0,taxRate},'monthly')})).filter(x=>x.years===currentYears||x.monthly<state.goalRegular)}
+function previewGoalOptimization(v){
+  const months=Math.max(1,Math.round(+v));
+  if(!state.calc||state.mode!=='goal')return;
+  const i=state.calc,freq=i.frequency,years=months/12;
+  const base={...i,years,regular:0};
+  const regular=solveGoalRegular(i.target,base,freq);
+  const label=formatMonths(months),noContribution=regular<1;
+  const noContributionResult=simulate({...base,regular:0});
+  $('optimizationYearsValue').textContent=label;
+  const explanation=noContribution?`Дополнительные взносы не требуются: стартовый капитал и выбранная доходность уже позволяют достичь цели. Без новых пополнений итог через ${label} составит <b>${fmt(noContributionResult.iisNet)}</b>.`:`Для цели ${fmt(i.target)} за ${label} потребуется <b>${fmt(regular)} ${frequencyWord(freq)}</b>.`;
+  $('optimizationResult').innerHTML=`${explanation}${months<60?` <span class="term-warning-inline">Для получения льгот необходимо закрывать счёт после достижения минимального срока <button type="button" onclick="openInfo('term')" aria-label="Подробнее о минимальном сроке">i</button></span>`:''}`;
+}
+function destroyCharts(){state.charts.forEach(c=>c.destroy());state.charts=[]}
+function drawCharts(){
+  destroyCharts();const r=state.result,i=state.calc;
+  if(typeof Chart==='undefined'){
+    $('combinedChart').parentElement.innerHTML='<div class="chart-fallback"><b>График будет доступен после загрузки интерактивной библиотеки.</b><span>Расчёт и остальные элементы страницы продолжают работать.</span></div>';
+    return;
+  }
+  const ctx=$('combinedChart').getContext('2d');
+  const deposit=buildAlternativeSeries(i,r.labels.length,{annual:.155,taxMode:'deposit'});
+  const realEstate=buildAlternativeSeries(i,r.labels.length,{annual:.095,taxMode:'annual'});
+  const gold=buildAlternativeSeries(i,r.labels.length,{annual:.04,taxMode:'none'});
+  const crypto=buildAlternativeSeries(i,r.labels.length,{annual:.12,taxMode:'annual'});
+  const c=new Chart(ctx,{data:{labels:r.labels,datasets:[
+    {type:'line',label:'ИИС-3',data:r.iisSeries,borderColor:'#2f63df',backgroundColor:'rgba(47,99,223,.10)',fill:true,tension:.35,pointRadius:3,yAxisID:'y',order:1},
+    {type:'line',label:'Брокерский счёт',data:r.bsSeries,borderColor:'#8a95a7',backgroundColor:'rgba(138,149,167,.04)',fill:false,tension:.35,pointRadius:2,yAxisID:'y',order:2},
+    {type:'line',label:'Вклад · 15,5%',data:deposit,borderColor:'#159a67',borderDash:[6,5],backgroundColor:'transparent',fill:false,tension:.3,pointRadius:1,yAxisID:'y',order:3},
+    {type:'line',label:'Недвижимость · 9,5%',data:realEstate,borderColor:'#d97706',borderDash:[3,4],backgroundColor:'transparent',fill:false,tension:.3,pointRadius:1,yAxisID:'y',order:4},
+    {type:'line',label:'Физическое золото · 4%',data:gold,borderColor:'#b7791f',borderDash:[2,3],backgroundColor:'transparent',fill:false,tension:.3,pointRadius:1,yAxisID:'y',order:5},
+    {type:'line',label:'Стейкинг криптовалюты · 12%',data:crypto,borderColor:'#7c3aed',borderDash:[5,3],backgroundColor:'transparent',fill:false,tension:.3,pointRadius:1,yAxisID:'y',order:6}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:true,position:'bottom',labels:{boxWidth:9,usePointStyle:true,padding:10,font:{size:10}}},tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${fmt(c.raw)}`}}},scales:{y:{ticks:{callback:v=>fmt(v),maxTicksLimit:5},grid:{color:'rgba(227,232,240,.7)'}},x:{grid:{display:false},ticks:{maxTicksLimit:8}}}}});
+  state.charts.push(c);
+}
+
+function buildAlternativeSeries(i,count,{annual,taxMode='annual'}){
+  const monthly=Math.pow(1+annual,1/12)-1;const totalMonths=Math.max(1,Math.round(i.years*12));const values=[];let value=i.initial||0;let m=0;
+  const interval=i.frequency==='quarterly'?3:i.frequency==='semiannual'?6:i.frequency==='yearly'?12:1;let yearStart=value,yearDeposits=0;
+  for(let idx=1;idx<=count;idx++){
+    const target=Math.min(totalMonths,Math.round(idx/count*totalMonths));
+    while(m<target){m++;value*=1+monthly;if(i.frequency!=='none'&&m%interval===0){value+=(i.regular||0);yearDeposits+=(i.regular||0)}
+      if(m%12===0){const annualGain=Math.max(0,value-yearStart-yearDeposits);let tax=0;
+        if(taxMode==='deposit')tax=annualInvestmentTax(Math.max(0,annualGain-1000000));
+        else if(taxMode==='annual')tax=annualInvestmentTax(annualGain);
+        value-=tax;yearStart=value;yearDeposits=0;
+      }
+    }values.push(value)
+  }return values
+}
+function focusResultParameters(){const hero=document.querySelector('.result-hero');if(hero)hero.scrollIntoView({behavior:'smooth',block:'start'});}
+function editPlan(){showStep(state.mode==='capital'?'capital-1':'goal-1')}
+function editParameter(step){if(step==='result-frequency'&&state.mode==='goal'){document.getElementById('resultGoalFreqSlider')?.closest('.goal-result-frequency')?.scrollIntoView({behavior:'smooth',block:'center'});return;} state.editReturn=true;state.editStep=step;showStep(step);}function continueAfterEdit(next){if(state.editReturn){state.editReturn=false;state.editStep=null;const input={...getInputs(),reinvestDeduction:state.reinvestDeduction};if(state.mode==='goal'){const base={...input,regular:0};input.regular=solveGoalRegular(input.target,base,state.frequency);input.frequency=state.frequency;state.goalRegular=input.regular;}state.calc=input;state.result=simulate(input);renderResult();showStep('result');return true;}showStep(next);return true;}
+function restartCalculator(){state.mode=null;state.step=null;state.goal='';state.frequency='monthly';state.returnRate=20;state.returnName='ПИФ БКС';state.calc=null;state.result=null;state.paymentPage=0;state.editReturn=false;state.editStep=null;state.reinvestDeduction=false;document.querySelectorAll('.choice.selected').forEach(x=>x.classList.remove('selected'));const custom=$('customGoalField');if(custom)custom.classList.add('hidden');const cg=$('customGoalName');if(cg)cg.value='';showStep('start');}
+function applyDesktopInputSteps(){
+  const desktop=window.matchMedia('(min-width: 601px)').matches;
+  document.querySelectorAll('[data-desktop-step]').forEach(el=>{
+    if(desktop){
+      if(!el.parentElement.classList.contains('money-stepper-wrap')){
+        const wrap=document.createElement('div');wrap.className='money-stepper-wrap';el.parentNode.insertBefore(wrap,el);wrap.appendChild(el);
+        const controls=document.createElement('div');controls.className='money-stepper-controls';controls.innerHTML='<button type="button" aria-label="Увеличить сумму">▲</button><button type="button" aria-label="Уменьшить сумму">▼</button>';wrap.appendChild(controls);
+        const step=()=>Number(el.dataset.desktopStep||100000);
+        const change=dir=>{const next=Math.max(0,moneyValue(el.id)+dir*step());el.value=next;formatMoneyField(el);el.dispatchEvent(new Event('input',{bubbles:true}));};
+        controls.children[0].addEventListener('click',()=>change(1));controls.children[1].addEventListener('click',()=>change(-1));
+      }
+    }
+  });
+}
+function formatMoneyField(el){const raw=String(el.value||'').replace(/\D/g,'');if(!raw){el.value='';return}el.value=Number(raw).toLocaleString('ru-RU');}
+function setupMoneyFields(){document.querySelectorAll('input[data-money="1"]').forEach(el=>{el.addEventListener('input',()=>formatMoneyField(el));el.addEventListener('blur',()=>formatMoneyField(el));if(el.value)formatMoneyField(el);});}
+window.addEventListener('DOMContentLoaded',()=>{setupMoneyFields();const c=$('modeTabCapital'),g=$('modeTabGoal'),go=$('startContinue');if(c)c.addEventListener('click',()=>selectModePreview('capital'));if(g)g.addEventListener('click',()=>selectModePreview('goal'));if(go)go.addEventListener('click',continueMode);applyDesktopInputSteps();updateYears($('years').value);});
+window.addEventListener('resize',applyDesktopInputSteps);
+updateTermOptions();
+</script>
+
+<style id="planner-visual-hotfix">
+/* UX hotfix only: preserve calculations. */
+#screenResult > .eyebrow{display:block!important;width:100%!important;text-align:center!important;margin-left:auto!important;margin-right:auto!important}
+#screenResult .comparison-chart > .chart-title{display:block!important;width:100%!important;text-align:center!important}
+#screenResult .optimization > h4{display:block!important;width:100%!important;text-align:center!important}
+
+/* Phone: realistic iPhone proportions, very thin frame, no excessive vertical stretch. */
+.exact-app-device{width:min(100%,286px)!important;padding:0!important;margin:0 auto!important}
+.exact-app-frame{width:100%!important;aspect-ratio:9/19.5!important;border:1.5px solid #1f2024!important;border-radius:43px!important;background:#1f2024!important;overflow:hidden!important;box-shadow:0 14px 34px rgba(17,24,39,.16)!important}
+.exact-app-screen{position:relative!important;width:100%!important;height:100%!important;border-radius:41.5px!important;overflow:hidden!important;background:#f5f5f7!important}
+.exact-app-shot{display:block!important;width:100%!important;height:auto!important;min-height:100%!important;object-fit:cover!important;object-position:center top!important;border-radius:41.5px!important;user-select:none!important;pointer-events:none!important}
+
+/* Insert the Planner exactly below the annual deduction card, covering the original autopay area, then redraw autopay below it. */
+.exact-insert-zone{left:6px!important;right:6px!important;top:43.5%!important;height:auto!important;min-height:0!important;padding:0!important;background:#f5f5f7!important;display:flex!important;flex-direction:column!important;gap:5px!important;overflow:visible!important;pointer-events:none!important}
+.exact-onboarding{min-height:25px!important;padding:6px 9px!important;border-radius:10px!important;font-size:7.5px!important}
+.exact-planner-widget{padding:8px 9px!important;border-radius:13px!important;margin:0!important}
+.exact-mini-cards>div{min-height:30px!important;padding:4px 6px!important}
+.exact-autopay{min-height:34px!important;border-radius:12px!important;padding:5px 7px!important}
+
+@media(max-width:600px){
+  .exact-app-device{width:min(84vw,276px)!important}
+  .exact-app-frame{border-width:1px!important;border-radius:40px!important}
+  .exact-app-screen,.exact-app-shot{border-radius:39px!important}
+}
+</style>
+
+<style id="planner-rebuild-final">
+/* Rebuilt mock: no screenshot overlay, compact realistic phone. Calculation logic untouched. */
+.exact-app-device{width:min(100%,310px)!important;padding:0!important;margin:0 auto!important}
+.exact-app-frame{width:100%!important;aspect-ratio:9/19.5!important;border:2px solid #222328!important;border-radius:45px!important;background:#222328!important;overflow:hidden!important;box-shadow:0 16px 38px rgba(17,24,39,.16)!important}
+.exact-app-screen.bcs-mock-screen{height:100%!important;box-sizing:border-box!important;border-radius:43px!important;background:#f6f6f8!important;padding:13px 10px 14px!important;overflow:hidden!important;color:#30323a!important;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",Inter,Arial,sans-serif!important}
+.mock-status{height:19px;display:flex;align-items:center;justify-content:space-between;padding:0 6px;font-size:10px;font-weight:800;color:#1d2026}.mock-status-right{display:flex;align-items:center;gap:5px}.mock-signal{height:10px;display:flex;align-items:flex-end;gap:1px}.mock-signal i{display:block;width:2px;border-radius:2px;background:#1d2026}.mock-signal i:nth-child(1){height:3px}.mock-signal i:nth-child(2){height:5px}.mock-signal i:nth-child(3){height:7px}.mock-signal i:nth-child(4){height:9px}.mock-battery{width:20px;height:9px;border:1px solid #555;border-radius:3px;padding:1px;position:relative}.mock-battery:after{content:"";position:absolute;right:-3px;top:2px;width:2px;height:5px;border-radius:0 2px 2px 0;background:#777}.mock-battery i{display:block;width:70%;height:100%;border-radius:1px;background:#4d5158}
+.mock-top{height:31px;display:flex;align-items:center;justify-content:space-between}.mock-back{font-size:23px;font-weight:300;line-height:1;color:#30323a}.mock-account{padding:7px 10px;border-radius:18px;background:#3b3d42;color:#fff;font-size:8px;font-weight:700}.mock-title{margin-top:5px;font-size:20px;font-weight:800;letter-spacing:-.025em}.mock-subtitle{margin-top:4px;font-size:8px;color:#777e89}.mock-subtitle span{display:inline-grid;place-items:center;width:12px;height:12px;margin-left:3px;border-radius:50%;background:#e7e8eb;color:#7a8088;font-size:7px;font-weight:800}
+.mock-deduction{margin-top:12px;padding:10px;border-radius:17px;background:#fff;box-shadow:0 5px 16px rgba(24,31,45,.035)}.mock-deduction-title{font-size:12px;font-weight:800}.mock-deduction-body{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;margin-top:9px}.mock-deduction-copy{display:grid;gap:7px}.mock-deduction-copy div span{display:block;color:#777e89;font-size:7px}.mock-deduction-copy div b{display:block;margin-top:2px;font-size:9px}.mock-deduction-copy em{font-style:normal;display:inline-grid;place-items:center;width:10px;height:10px;margin-left:2px;border-radius:50%;background:#eceef1;color:#777;font-size:6px}.mock-ring{width:78px;height:78px;margin:auto;border-radius:50%;background:conic-gradient(#4dce79 0 72%,#e8ebee 72% 100%);position:relative}.mock-ring:after{content:"";position:absolute;inset:12px;border-radius:50%;background:#fff}.mock-ring>div{position:absolute;z-index:1;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.mock-ring span{font-size:7px;color:#7b8390}.mock-ring b{margin-top:2px;font-size:9px}
+.exact-onboarding{margin:8px 0 0!important;padding:6px 9px!important;min-height:0!important;border-radius:10px 10px 5px 5px!important;font-size:7px!important}.exact-planner-widget{margin:0!important;padding:8px 9px!important;border-radius:5px 5px 13px 13px!important}.exact-mini-cards{gap:5px!important;margin-top:5px!important}.exact-mini-cards>div{min-height:30px!important;padding:5px 6px!important}.exact-mini-cards span{font-size:6px!important}.exact-mini-cards b{font-size:9px!important}.exact-autopay{margin-top:7px;min-height:34px!important;padding:5px 7px!important;border-radius:13px!important}.mock-purple-link{margin-top:8px;display:flex;justify-content:space-between;align-items:center;padding:8px 9px;border-radius:10px;background:#7458df;color:#fff;font-size:7px}.mock-purple-link b{font-size:12px}.mock-list-card{margin-top:5px;display:grid;grid-template-columns:24px 1fr auto;gap:7px;align-items:center;padding:7px 8px;border-radius:12px;background:#fff}.mock-list-card .mock-list-icon{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#f0f1f3;color:#59616d;font-size:12px}.mock-list-card .mock-list-icon.dark{background:radial-gradient(circle at 70% 30%,#7659e9,#16015c 70%)}.mock-list-card small{display:block;font-size:6px;color:#777e89}.mock-list-card b{display:block;font-size:8px;margin-top:1px}.mock-list-card>strong{font-size:12px}.mock-list-card-fade{opacity:.92}
+@media(max-width:600px){.exact-app-device{width:min(88vw,300px)!important}.exact-app-frame{border-width:1.5px!important;border-radius:42px!important}.exact-app-screen.bcs-mock-screen{border-radius:40.5px!important;padding:12px 9px 13px!important}}
+</style>
+</body>
+<style>
+/* UX-only correction based on the supplied real BCS IIS screenshot. No calculation logic is changed. */
+#screenResult>.eyebrow,
+#screenResult .eyebrow{width:100%!important;text-align:center!important;}
+#screenResult .comparison-chart>.chart-title{width:100%!important;text-align:center!important;}
+#screenResult .optimization>h4{width:100%!important;text-align:center!important;}
+
+/* Real application reference is used as the phone screen; only the Planner is inserted into it. */
+.exact-planner-showcase{display:flex!important;flex-direction:column!important;align-items:center!important;gap:12px!important;}
+.exact-planner-showcase .planner-showcase-head{width:100%;text-align:center!important;}
+.exact-planner-showcase .planner-showcase-head h4{margin:0;}
+.exact-planner-showcase .planner-showcase-head p{max-width:520px;margin:6px auto 0!important;}
+.exact-app-device{width:min(100%,310px)!important;padding:0!important;}
+.exact-app-frame{width:100%!important;aspect-ratio:276/773!important;border:3px solid #202126!important;border-radius:46px!important;background:#202126!important;overflow:hidden!important;box-shadow:0 18px 45px rgba(17,24,39,.18)!important;}
+.exact-app-screen{position:relative;width:100%;height:100%;overflow:hidden;border-radius:42px;background:#f5f5f7;}
+.exact-app-shot{display:block;width:100%;height:100%;object-fit:cover;object-position:center top;border-radius:42px;user-select:none;pointer-events:none;}
+.exact-insert-zone{position:absolute;left:0;right:0;top:42.4%;height:27.6%;padding:7px 10px;background:#f5f5f7;display:flex;flex-direction:column;gap:5px;overflow:hidden;pointer-events:none;}
+.exact-onboarding{margin:0!important;min-height:24px!important;border-radius:10px 10px 5px 5px!important;padding:5px 8px!important;font-size:7.5px!important;}
+.exact-planner-widget{margin:0!important;padding:8px 9px!important;border-radius:5px 5px 13px 13px!important;box-shadow:0 4px 12px rgba(30,40,60,.04)!important;}
+.exact-planner-widget .planner-widget-head{align-items:center!important;}
+.exact-planner-widget .planner-widget-head small{font-size:7px!important;}
+.exact-planner-widget .planner-widget-head strong{font-size:11px!important;margin-top:1px!important;max-width:165px!important;}
+.exact-gear{width:21px!important;height:21px!important;border-radius:7px!important;font-size:12px!important;background:#f0f1f4!important;color:#59616e!important;}
+.exact-planner-widget .planner-widget-title{margin-top:5px!important;font-size:7px!important;}
+.exact-planner-widget .planner-widget-title b{font-size:12px!important;}
+.exact-planner-widget .planner-bar{height:5px!important;margin-top:4px!important;}
+.exact-game{margin-top:4px!important;padding:4px 6px!important;border-radius:7px!important;gap:4px!important;}
+.exact-game>span{width:13px!important;height:13px!important;font-size:7px!important;}
+.exact-game b{font-size:7px!important;}
+.exact-game small{font-size:6px!important;}
+.exact-mini-cards{display:grid!important;grid-template-columns:1fr 1fr!important;gap:5px!important;margin-top:5px!important;}
+.exact-mini-cards>div{min-height:34px!important;padding:5px 6px!important;border-radius:8px!important;background:#f7f8fa!important;border:1px solid #eceef2!important;display:flex!important;flex-direction:column!important;justify-content:center!important;}
+.exact-mini-cards span{font-size:6px!important;line-height:1.1!important;color:#777e8b!important;}
+.exact-mini-cards b{font-size:9px!important;line-height:1.1!important;margin-top:2px!important;color:#30343a!important;}
+.exact-autopay{min-height:34px;display:grid;grid-template-columns:24px 1fr auto;gap:6px;align-items:center;background:#fff;border-radius:12px;padding:5px 7px;box-shadow:0 4px 12px rgba(30,40,60,.035);}
+.exact-autopay-icon{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:#f0f1f3;color:#565d69;font-size:10px;}
+.exact-autopay b{display:block;font-size:7.5px;line-height:1.15;color:#343840}.exact-autopay small{display:block;font-size:6px;color:#8a909a;margin-top:1px}.exact-autopay strong{font-size:13px;color:#414750}
+
+/* Desktop: stable full-width benefit grid with values aligned on the same baseline. */
+@media(min-width:601px){
+  #screenResult .compare{width:100%!important;max-width:none!important;}
+  #screenResult .compare .benefit-linked,
+  #screenResult .compare .benefit-main-expanded{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;}
+  #screenResult .compare .benefit-main-expanded{padding:18px!important;}
+  #screenResult .compare .benefit-sales-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;width:100%!important;align-items:stretch!important;}
+  #screenResult .compare .benefit-sales-grid:has(.benefit-sales-metric-wide){grid-template-columns:repeat(2,minmax(0,1fr))!important;}
+  #screenResult .compare .benefit-sales-primary,
+  #screenResult .compare .benefit-sales-metric{min-width:0!important;min-height:126px!important;padding:14px!important;display:grid!important;grid-template-rows:34px 48px 26px!important;align-items:end!important;overflow:hidden!important;}
+  #screenResult .compare .benefit-sales-primary span,
+  #screenResult .compare .benefit-sales-metric span{align-self:start!important;font-size:11px!important;line-height:1.25!important;}
+  #screenResult .compare .benefit-sales-primary b,
+  #screenResult .compare .benefit-sales-metric b{align-self:center!important;margin:0!important;width:100%!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.035em!important;}
+  #screenResult .compare .benefit-sales-primary b{font-size:clamp(24px,2.7vw,34px)!important;}
+  #screenResult .compare .benefit-sales-metric b{font-size:clamp(21px,2.2vw,28px)!important;}
+  #screenResult .compare .benefit-optim-link{align-self:end!important;margin:0!important;font-size:9px!important;line-height:1.15!important;}
+  #screenResult .compare .benefit-main-details{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px!important;width:100%!important;}
+  #screenResult .compare .benefit-main-details button{min-width:0!important;min-height:112px!important;padding:12px!important;display:grid!important;grid-template-rows:50px 34px!important;align-items:end!important;overflow:hidden!important;}
+  #screenResult .compare .benefit-main-details button span{align-self:start!important;font-size:11px!important;line-height:1.2!important;}
+  #screenResult .compare .benefit-main-details button strong{align-self:end!important;width:100%!important;font-size:clamp(15px,1.6vw,19px)!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.02em!important;}
+  #screenResult .compare .benefit-period-two{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;width:100%!important;}
+  #screenResult .compare .period-metric{min-width:0!important;min-height:104px!important;padding:12px!important;display:grid!important;grid-template-rows:38px 38px!important;align-items:end!important;overflow:hidden!important;}
+  #screenResult .compare .period-metric span{align-self:start!important;font-size:11px!important;line-height:1.2!important;}
+  #screenResult .compare .period-metric b{align-self:end!important;width:100%!important;font-size:clamp(18px,2vw,25px)!important;line-height:1.05!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-variant-numeric:tabular-nums!important;letter-spacing:-.025em!important;}
+}
+@media(max-width:600px){
+  .exact-app-device{width:min(100%,292px)!important;}
+  .exact-app-frame{border-width:2px!important;border-radius:43px!important;}
+  .exact-app-screen,.exact-app-shot{border-radius:41px!important;}
+}
+</style>
+
+</html>
+
+<style>
+/* Desktop-only refinement: let the key IIS benefit metrics use the full width of the benefit block.
+   Mobile layout intentionally remains untouched. */
+@media (min-width: 601px){
+  .compare .benefit-linked,
+  .compare .benefit-main{
+    width:100%;
+    max-width:none;
+    min-width:0;
+  }
+  .compare .benefit-sales-grid{
+    width:100%;
+    grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);
+    gap:12px;
+    align-items:stretch;
+  }
+  .compare .benefit-sales-primary,
+  .compare .benefit-sales-metric{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+  }
+  /* In capital mode there are only two key metrics, so they share the whole row evenly. */
+  .compare .benefit-sales-grid:has(.benefit-sales-metric-wide){
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  }
+  .compare .benefit-sales-grid .benefit-sales-metric-wide{
+    grid-column:auto;
+  }
+  .compare .benefit-sales-primary b{font-size:clamp(30px,3vw,40px)}
+  .compare .benefit-sales-metric b{font-size:clamp(22px,2.3vw,30px)}
+}
+</style>
+
+<style>
+/* Final desktop correction: the green IIS benefit panel must use the entire width of its parent.
+   The earlier desktop grid reserved an empty second column, which visually compressed the content to the left. */
+@media (min-width: 601px){
+  .compare .benefit-linked{
+    display:block !important;
+    width:100% !important;
+    max-width:none !important;
+    grid-template-columns:none !important;
+  }
+  .compare .benefit-main{
+    width:100% !important;
+    max-width:none !important;
+    min-width:0;
+  }
+  .compare .benefit-sales-grid{
+    width:100%;
+    grid-template-columns:minmax(0,1.35fr) minmax(0,1fr) minmax(0,1fr);
+  }
+  .compare .benefit-main-details{
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+  .compare .benefit-period-two{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .compare .benefit-main-details button,
+  .compare .period-metric{
+    min-width:0;
+  }
+  .compare .benefit-main-details button strong,
+  .compare .period-metric b{
+    overflow-wrap:anywhere;
+  }
+  /* Capital mode has two key sales points, so they share the row evenly. */
+  .compare .benefit-sales-grid:has(.benefit-sales-metric-wide){
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  }
+}
+</style>
+
+<style>
+/* Targeted final polish */
+.plan-details summary{justify-content:center;position:relative;text-align:center}
+.plan-details summary:after{position:absolute;right:15px}
+.goal-frequency-caption-top{text-align:left;margin:0 0 2px;font-weight:800;color:rgba(255,255,255,.9)}
+.goal-frequency-head-bottom{margin-top:4px}
+
+/* Phone prototype based on the supplied BCS IIS screen. */
+.iphone-preview{display:flex;justify-content:center;width:100%}
+.iphone-device{position:relative;width:min(100%,344px);padding:0 7px}
+.iphone-frame{position:relative;width:100%;aspect-ratio:9/19.5;border:9px solid #1f2024;border-radius:54px;background:#1f2024;box-shadow:0 24px 54px rgba(18,26,43,.22),inset 0 0 0 1px rgba(255,255,255,.08);overflow:hidden}
+.iphone-side{position:absolute;background:#2a2b2f;border-radius:3px;z-index:3}
+.iphone-side-left-a{left:1px;top:116px;width:4px;height:46px}.iphone-side-left-b{left:1px;top:174px;width:4px;height:72px}.iphone-side-right{right:1px;top:152px;width:4px;height:92px}
+.iphone-screen.bcs-screen{height:100%;min-height:0!important;background:#f5f5f7;color:#30323a;padding:17px 11px 23px;overflow:hidden}
+.iphone-dynamic-island{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:92px;height:25px;border-radius:99px;background:#111;z-index:5}
+.iphone-status{height:25px;padding:0 5px;display:flex;justify-content:space-between;align-items:center;font-size:10px;font-weight:800;color:#32343a}
+.bcs-nav{display:flex;align-items:center;justify-content:space-between;margin-top:8px}.bcs-back{font-size:22px}.bcs-account{font-size:10px;color:#fff;background:#424348;border-radius:16px;padding:8px 11px}
+.bcs-title{font-size:22px;font-weight:850;margin-top:10px;letter-spacing:-.03em}.bcs-subtitle{font-size:10px;color:#7c8290;margin-top:4px}.bcs-subtitle span{display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:#e3e5e9;color:#707683;font-size:8px;margin-left:4px}
+.bcs-planner-widget{margin-top:15px;padding:14px;border:0;border-radius:18px;background:#fff;box-shadow:0 7px 22px rgba(30,40,60,.06)}
+.planner-widget-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.planner-widget-head small{display:block;color:#6b7280;font-size:9px}.planner-widget-head strong{display:block;font-size:15px;line-height:1.2;margin-top:2px;max-width:190px}
+.bcs-planner-widget .planner-widget-title{margin-top:13px}.bcs-planner-widget .planner-widget-caption{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:5px}.bcs-planner-widget .planner-widget-caption b{text-align:right}.bcs-planner-widget .planner-app-cards{margin-top:10px}.bcs-planner-widget .planner-app-cards>div{background:#f6f7f9;border-color:#eceef2}.bcs-planner-widget .planner-settings-row{background:#f8f9fb}
+.bcs-fake-card{display:grid;grid-template-columns:31px 1fr auto;gap:9px;align-items:center;margin-top:10px;background:#fff;border-radius:16px;padding:10px;box-shadow:0 5px 15px rgba(30,40,60,.035)}.bcs-fake-card.muted{margin-top:8px}.bcs-fake-icon{width:31px;height:31px;border-radius:50%;display:grid;place-items:center;background:#f0f1f3;color:#4e5665}.bcs-fake-card b{display:block;font-size:10px}.bcs-fake-card small{display:block;font-size:8px;color:#858b97;margin-top:2px}.bcs-fake-strip{margin-top:9px;border-radius:13px;background:linear-gradient(90deg,#7b55e9,#6650d8);color:#fff;padding:8px 10px;font-size:9px}
+.iphone-home{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:92px;height:4px;border-radius:99px;background:#101114;opacity:.8}
+
+/* Desktop-only: make every benefit card use its space predictably and keep values aligned. */
+@media (min-width: 601px){
+  .compare .benefit-main-expanded{padding:20px}
+  .compare .benefit-sales-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px}
+  .compare .benefit-sales-grid:has(.benefit-sales-metric-wide){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+  .compare .benefit-sales-primary,.compare .benefit-sales-metric{min-height:122px;padding:16px;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;overflow:hidden}
+  .compare .benefit-sales-primary b,.compare .benefit-sales-metric b{width:100%;margin-top:12px;white-space:normal!important;overflow:visible!important;text-overflow:clip!important;overflow-wrap:normal;word-break:keep-all;font-variant-numeric:tabular-nums}
+  .compare .benefit-sales-primary b{font-size:clamp(25px,3vw,38px);line-height:1.02}
+  .compare .benefit-sales-metric b{font-size:clamp(22px,2.3vw,31px);line-height:1.04}
+  .compare .benefit-main-details{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:10px}
+  .compare .benefit-main-details button{min-height:118px;padding:14px;display:flex!important;flex-direction:column!important;align-items:flex-start!important;justify-content:space-between!important;gap:12px;overflow:hidden}
+  .compare .benefit-main-details button span{width:100%;font-size:12px;line-height:1.3}
+  .compare .benefit-main-details button strong{width:100%;font-size:clamp(16px,1.7vw,22px)!important;line-height:1.08;white-space:normal!important;overflow-wrap:normal!important;word-break:keep-all;font-variant-numeric:tabular-nums;text-align:left}
+  .compare .benefit-period-two{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px}
+  .compare .period-metric{min-height:112px!important;padding:15px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;overflow:hidden}
+  .compare .period-metric span{font-size:12px!important;line-height:1.3}.compare .period-metric b{font-size:clamp(20px,2.2vw,30px)!important;line-height:1.05;white-space:normal!important;overflow-wrap:normal!important;word-break:keep-all;font-variant-numeric:tabular-nums}
+}
+@media(max-width:600px){.iphone-device{width:min(100%,315px)}.iphone-frame{border-width:8px;border-radius:48px}.iphone-screen.bcs-screen{padding:16px 10px 22px}.iphone-dynamic-island{width:82px;height:23px}.planner-showcase-head{text-align:center}.goal-frequency-caption-top{text-align:center}}
+
+/* User-requested planner + desktop benefit corrections */
+.iphone-device{width:min(100%,326px)!important;padding:0!important}
+.iphone-frame{border-width:5px!important;border-radius:48px!important;box-shadow:0 18px 42px rgba(18,26,43,.18)!important}
+.iphone-side{display:none!important}
+.iphone-screen.bcs-screen{padding:14px 10px 18px!important}
+.iphone-status{height:24px!important;padding:0 4px 8px!important;font-size:10px!important}
+.status-right{display:flex;align-items:center;gap:5px}.status-signal{font-size:8px;letter-spacing:-1px}.status-battery{position:relative;display:inline-flex;align-items:center;justify-content:center;width:25px;height:12px;border:1px solid #555b65;border-radius:4px;font-size:7px;overflow:hidden}.status-battery:after{content:'';position:absolute;right:-3px;width:2px;height:6px;border-radius:0 2px 2px 0;background:#555b65}.status-battery i{position:absolute;inset:1px;width:72%;border-radius:2px;background:#555b65;opacity:.18}.status-battery b{position:relative;z-index:1;font-size:7px}
+.planner-showcase-head{margin-bottom:2px!important}.bcs-planner-widget{padding:11px!important;margin-top:11px!important}.planner-widget-head strong{font-size:14px!important}.bcs-planner-widget .planner-widget-title{margin-top:9px!important}.planner-app-cards{margin-top:8px!important}.planner-app-cards>div{padding:8px!important}.planner-settings-static{display:grid;place-items:center;width:26px;height:26px;border-radius:9px;background:#f1f3f6;color:#606775;font-size:13px;font-weight:900}.planner-tagline{margin-top:9px;padding-top:8px;border-top:1px solid #eceef2;text-align:center;color:#6d7480;font-size:9px;font-weight:750;line-height:1.3}.iphone-home{display:none!important}
+@media(max-width:600px){.iphone-device{width:min(100%,292px)!important}.iphone-frame{border-width:5px!important;border-radius:44px!important}}
+@media(min-width:601px){
+ .compare{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+ .compare .benefit-main-expanded{width:100%!important;box-sizing:border-box!important}
+ .compare .benefit-sales-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;width:100%!important}
+ .compare .benefit-sales-grid:has(.benefit-sales-metric-wide){grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ .compare .benefit-sales-primary,.compare .benefit-sales-metric{width:auto!important;max-width:none!important;min-width:0!important;height:100%!important;box-sizing:border-box!important}
+ .compare .benefit-sales-primary b,.compare .benefit-sales-metric b{font-size:clamp(22px,2.4vw,38px)!important;line-height:1.06!important;word-break:normal!important;overflow-wrap:anywhere!important}
+ .compare .benefit-main-details{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;width:100%!important}
+ .compare .benefit-main-details button{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+ .compare .benefit-main-details button strong{font-size:clamp(16px,1.55vw,24px)!important;overflow-wrap:anywhere!important;word-break:normal!important}
+ .compare .benefit-period-two{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;gap:12px!important}
+ .compare .period-metric{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+ .compare .period-metric b{overflow-wrap:anywhere!important;word-break:normal!important}
+}
+
+/* Final targeted fixes: desktop steppers, compact rhythm, realistic static planner, benefit layout */
+@media(min-width:601px){
+  .money-stepper-wrap{position:relative;display:block}.money-stepper-wrap .input{padding-right:48px!important}
+  .money-stepper-controls{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:grid;grid-template-rows:1fr 1fr;width:30px;height:36px;border:1px solid #d7deea;border-radius:8px;overflow:hidden;background:#fff}
+  .money-stepper-controls button{border:0;background:#fff;color:#5f6d82;font-size:12px;line-height:1;cursor:pointer;padding:0}.money-stepper-controls button+button{border-top:1px solid #e5e9f0}.money-stepper-controls button:hover{background:#f2f6ff;color:#2f63df}
+  .compare .benefit-sales-primary,.compare .benefit-sales-metric{display:grid!important;grid-template-rows:minmax(34px,auto) 1fr;align-content:stretch!important}
+  .compare .benefit-sales-primary b,.compare .benefit-sales-metric b{align-self:end!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important;font-size:clamp(20px,2.0vw,32px)!important;letter-spacing:-.035em!important}
+  .compare .benefit-main-details button{display:grid!important;grid-template-rows:minmax(42px,auto) 1fr!important;align-content:stretch!important}
+  .compare .benefit-main-details button strong{align-self:end!important;white-space:nowrap!important;overflow:hidden!important;font-size:clamp(15px,1.45vw,22px)!important;letter-spacing:-.025em!important}
+  .compare .period-metric{display:grid!important;grid-template-rows:minmax(34px,auto) 1fr!important}.compare .period-metric b{align-self:end!important;white-space:nowrap!important;overflow:hidden!important;font-size:clamp(18px,1.8vw,27px)!important;letter-spacing:-.025em!important}
+}
+@media(max-width:600px){.money-stepper-controls{display:none!important}}
+.goal-result-frequency{padding:10px 12px!important}.goal-frequency-caption-top{margin-bottom:0!important;font-size:11px!important}.goal-result-frequency input[type=range]{margin:0!important;height:28px!important}.goal-frequency-head-bottom{margin-top:0!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;white-space:nowrap!important}.goal-frequency-head-bottom b,.goal-frequency-head-bottom span{font-size:10px!important;line-height:1.1!important}
+.iphone-device{width:min(100%,318px)!important}.iphone-frame{border:3px solid #1f2024!important;border-radius:50px!important;background:#1f2024!important;overflow:hidden!important}.iphone-screen.bcs-screen{border-radius:46px!important;padding:13px 9px 18px!important;background:#f5f5f7!important;overflow:hidden!important}.iphone-dynamic-island{display:none!important}
+.iphone-status{height:25px!important;padding:0 8px 6px!important;font-size:11px!important;font-weight:800!important}.status-right{gap:6px!important}.status-signal-bars{height:12px;display:flex;align-items:flex-end;gap:1.5px}.status-signal-bars i{display:block;width:2.5px;background:#30343a;border-radius:2px}.status-signal-bars i:nth-child(1){height:4px}.status-signal-bars i:nth-child(2){height:6px}.status-signal-bars i:nth-child(3){height:9px}.status-signal-bars i:nth-child(4){height:12px}.status-lte{font-size:11px;font-weight:800}.status-battery-real{height:15px;min-width:27px;padding:0 4px;border-radius:5px;background:#30343a;color:#fff;display:inline-flex;align-items:center;justify-content:center;position:relative;font-size:8px;font-weight:850}.status-battery-real:after{content:'';position:absolute;right:-2px;width:2px;height:6px;background:#30343a;border-radius:0 2px 2px 0}.status-battery-real i{display:none}
+.bcs-deduction-card{margin-top:13px;background:#fff;border-radius:18px;padding:12px;box-shadow:0 6px 18px rgba(30,40,60,.04)}.bcs-deduction-head{display:flex;align-items:center;justify-content:space-between}.bcs-deduction-head small{display:block;font-size:10px;color:#424650;font-weight:850}.bcs-deduction-head b{display:block;margin-top:2px;font-size:17px}.bcs-deduction-ring{display:grid;place-items:center;width:36px;height:36px;border:7px solid #4ecb77;border-radius:50%;color:#28a95a;font-size:10px;background:#fff}.bcs-deduction-meta{margin-top:8px;display:grid;grid-template-columns:1fr auto;gap:3px 8px;font-size:8px;color:#858b97}.bcs-deduction-meta b{color:#4a4f58;font-size:9px}
+.planner-onboarding{margin:8px 0 -3px;position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:11px 11px 5px 5px;background:linear-gradient(90deg,#7957e8,#674ee0);color:#fff;font-size:8px;font-weight:750}.planner-onboarding b{font-size:12px;line-height:1;opacity:.85}
+.bcs-planner-widget{margin-top:0!important;border-radius:5px 5px 17px 17px!important;padding:10px 11px!important}.planner-gear{font-family:system-ui,-apple-system,sans-serif;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#f0f1f4;color:#5f6673;font-size:15px;line-height:1}.planner-game{display:flex;align-items:center;gap:6px;margin-top:7px;padding:6px 8px;border-radius:9px;background:#eefaf2;color:#25874b}.planner-game>span{display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#45c875;color:#fff;font-size:9px}.planner-game b{display:block;font-size:9px}.planner-game small{display:block;font-size:7px;color:#4e8e65;margin-top:1px}.bcs-planner-widget .planner-widget-title{margin-top:7px!important}.bcs-planner-widget .planner-widget-caption{margin-top:5px!important}.planner-app-cards{margin-top:6px!important}.planner-app-cards>div{padding:7px!important}
+@media(max-width:600px){.iphone-device{width:min(100%,300px)!important}.iphone-frame{border-width:3px!important;border-radius:47px!important}.iphone-screen.bcs-screen{border-radius:44px!important}}
+</style>
