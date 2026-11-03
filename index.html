@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>БКС • ИИС — персональный план</title>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){
+  m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+  m[i].l=1*new Date();
+  for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
+  k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+})(window,document,'script','https://mc.yandex.ru/metrika/tag.js?id=114049199','ym');
+ym(114049199,'init',{ssr:true,webvisor:true,clickmap:true,referrer:document.referrer,url:location.href,accurateTrackBounce:true,trackLinks:true});
+</script>
+<!-- /Yandex.Metrika counter -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 <style>
@@ -450,6 +461,7 @@ button{border:0}
 </style>
 </head>
 <body>
+<noscript><div><img src="https://mc.yandex.ru/watch/114049199" style="position:absolute;left:-9999px;" alt=""></div></noscript>
 <div class="app">
   <div class="shell">
     <div class="top">
@@ -562,6 +574,21 @@ button{border:0}
 
 <script>
 const state={mode:null,step:null,goal:'',frequency:'monthly',returnRate:20,returnName:'ПИФ БКС',charts:[],paymentPage:0,editReturn:false,editStep:null,reinvestDeduction:false};
+const METRIKA_ID=114049199;
+const trackedFunnelGoals=new Set();
+function analyticsNumber(value){const n=Number(value);return Number.isFinite(n)?Math.round(n*100)/100:0}
+function getAnalyticsParams(extra={}){
+  const c=state.calc||{},r=state.result||{};
+  const initial=Number.isFinite(c.initial)?c.initial:(state.mode==='capital'?moneyValue('capitalAmount'):moneyValue('goalInitial'));
+  const regular=Number.isFinite(c.regular)?c.regular:(state.mode==='capital'?moneyValue('regularAmount'):0);
+  const target=Number.isFinite(c.target)?c.target:moneyValue('targetAmount');
+  const years=Number.isFinite(c.years)?c.years:Number($('years')?.value||0);
+  const taxRate=Number.isFinite(c.taxRate)?c.taxRate*100:Number($('taxRate')?.value||0);
+  const returnRate=Number.isFinite(c.rate)?c.rate:state.returnRate;
+  return {mode:state.mode||'',step:state.step||'',goal_name:state.goal||'',initial_amount:analyticsNumber(initial),target_amount:analyticsNumber(target),regular_amount:analyticsNumber(regular),years:analyticsNumber(years),frequency:c.frequency||state.frequency||'',return_rate:analyticsNumber(returnRate),return_name:state.returnName||'',tax_rate:analyticsNumber(taxRate),reinvest_deduction:Boolean(state.reinvestDeduction),iis_net:analyticsNumber(r.iisNet),broker_net:analyticsNumber(r.bs),economic_iis:analyticsNumber(r.economicIIS),economic_broker:analyticsNumber(r.economicBS),total_contrib:analyticsNumber(r.totalContrib),own_contrib:analyticsNumber(r.ownContrib),deduction:analyticsNumber(r.deduction),income_exemption:analyticsNumber(r.avoidedAtEnd),deferred_tax_effect:analyticsNumber(r.deferred),...extra};
+}
+function trackGoal(name,params={}){try{if(typeof window.ym==='function')window.ym(METRIKA_ID,'reachGoal',name,getAnalyticsParams(params));}catch(error){console.warn('Metrika goal error',error)}}
+function trackGoalOnce(name,params={}){if(trackedFunnelGoals.has(name))return;trackedFunnelGoals.add(name);trackGoal(name,params);}
 const DEPOSIT_TAX_FREE_KEY_RATE_SCENARIO=.16;
 const DEPOSIT_TAX_FREE_INTEREST=1000000*DEPOSIT_TAX_FREE_KEY_RATE_SCENARIO;
 const $=id=>document.getElementById(id);
@@ -573,23 +600,23 @@ function updateStepLabels(){const goal=state.mode==='goal';$('termEyebrow').text
 function showStep(id){document.querySelectorAll('.step').forEach(x=>x.classList.remove('active'));$(id).classList.add('active');state.step=id;updateStepLabels();updateProgress();window.scrollTo({top:0,behavior:'smooth'})}
 function updateProgress(){if(state.step==='start'){ $('progressFill').style.width='8%';return} if(state.step==='result'){ $('progressFill').style.width='100%';return} const map=state.mode==='capital'?['capital-1','term','contributions','return','tax']:['goal-1','goal-2','term','goal-initial','return','tax']; const i=map.indexOf(state.step);$('progressFill').style.width=((i+1)/map.length*92)+'%';}
 function selectModePreview(mode){state.mode=mode;const ctaText=$('ctaText');if(ctaText){ctaText.textContent='';ctaText.innerHTML='';ctaText.classList.add('cta-text-hidden');}$('ctaTitle').textContent='Следующий шаг';if(mode==='goal'&&state.frequency==='none')state.frequency='monthly';document.querySelectorAll('.mode-tab').forEach(x=>x.classList.remove('selected'));const tab=mode==='capital'?'modeTabCapital':'modeTabGoal';$(tab).classList.add('selected');$('modeTabCapital').setAttribute('aria-selected',mode==='capital');$('modeTabGoal').setAttribute('aria-selected',mode==='goal');$('modeDescCapital').classList.toggle('active',mode==='capital');$('modeDescGoal').classList.toggle('active',mode==='goal')}
-function continueMode(){if(!state.mode)selectModePreview('capital');showStep(state.mode==='capital'?'capital-1':'goal-1')}
+function continueMode(){if(!state.mode)selectModePreview('capital');trackGoalOnce(state.mode==='capital'?'capital_start':'goal_start');showStep(state.mode==='capital'?'capital-1':'goal-1')}
 function backToStart(){state.mode=null;showStep('start')}
 function selectGoal(el,value){document.querySelectorAll('#goalChoices .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');state.goal=value;$('customGoalField').classList.toggle('hidden',value!=='Своя цель');if(value==='Своя цель')setTimeout(()=>$('customGoalName').focus(),60)}
-function nextFromGoal1(){if(!state.goal)return alert('Выберите цель');if(state.goal==='Своя цель'){const v=$('customGoalName').value.trim();if(!v)return alert('Укажите вашу цель');state.goal=v}continueAfterEdit('goal-2')}
-function nextFromGoal2(){if(!(moneyValue('targetAmount')>0))return alert('Укажите сумму цели');continueAfterEdit('term')}
+function nextFromGoal1(){if(!state.goal)return alert('Выберите цель');if(state.goal==='Своя цель'){const v=$('customGoalName').value.trim();if(!v)return alert('Укажите вашу цель');state.goal=v}trackGoalOnce('goal_type_done');continueAfterEdit('goal-2')}
+function nextFromGoal2(){if(!(moneyValue('targetAmount')>0))return alert('Укажите сумму цели');trackGoalOnce('goal_amount_done');continueAfterEdit('term')}
 function moneyValue(id){return Number(String($(id)?.value||'').replace(/\s/g,'').replace(/[^0-9.-]/g,''))||0}
-function nextFromGoalInitial(){const initial=moneyValue('goalInitial'),target=moneyValue('targetAmount');if(initial<0)return alert('Укажите первоначальный взнос');if(initial>target)return alert('Первоначальный взнос не может быть больше цели');continueAfterEdit('return')}
-function nextFromCapital1(){if(!(moneyValue('capitalAmount')>0))return alert('Укажите стартовый капитал');showStep('term')}
+function nextFromGoalInitial(){const initial=moneyValue('goalInitial'),target=moneyValue('targetAmount');if(initial<0)return alert('Укажите первоначальный взнос');if(initial>target)return alert('Первоначальный взнос не может быть больше цели');trackGoalOnce('goal_initial_done');continueAfterEdit('return')}
+function nextFromCapital1(){if(!(moneyValue('capitalAmount')>0))return alert('Укажите стартовый капитал');trackGoalOnce('capital_amount_done');showStep('term')}
 function updateTermOptions(){}
 function updateYears(v){const n=+v;$('yearsValue').textContent=n===1?'1 год':n<5?`${n} года`:n+' лет';updateTermOptions()}
-function nextFromTerm(){continueAfterEdit(state.mode==='goal'?'goal-initial':'contributions')}
+function nextFromTerm(){trackGoalOnce(state.mode==='capital'?'capital_term_done':'goal_term_done');continueAfterEdit(state.mode==='goal'?'goal-initial':'contributions')}
 function goTermBack(){showStep(state.mode==='capital'?'capital-1':'goal-2')}
 function selectFrequency(el,val){document.querySelectorAll('#frequencyChoices .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');state.frequency=val;$('regularAmountField').classList.toggle('hidden',state.mode==='goal'||val==='none')}
-function nextFromContrib(){if(state.mode==='capital'&&state.frequency!=='none'&&!(moneyValue('regularAmount')>0))return alert('Укажите сумму пополнения');continueAfterEdit('return')}
+function nextFromContrib(){if(state.mode==='capital'&&state.frequency!=='none'&&!(moneyValue('regularAmount')>0))return alert('Укажите сумму пополнения');trackGoalOnce('capital_contrib_done');continueAfterEdit('return')}
 function goContribBack(){showStep('term')}
 function selectReturn(el,rate,name){document.querySelectorAll('#returnChoices .choice').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');state.returnName=name;$('customReturnField').classList.toggle('hidden',rate!==null);if(rate!==null)state.returnRate=rate}
-function nextFromReturn(){if(!$('customReturnField').classList.contains('hidden')){const r=+$('customReturn').value;if(!(r>0&&r<=200))return alert('Укажите доходность от 0 до 200%');state.returnRate=r}continueAfterEdit('tax')}
+function nextFromReturn(){if(!$('customReturnField').classList.contains('hidden')){const r=+$('customReturn').value;if(!(r>0&&r<=200))return alert('Укажите доходность от 0 до 200%');state.returnRate=r}trackGoalOnce(state.mode==='capital'?'capital_return_done':'goal_return_done');continueAfterEdit('tax')}
 function goReturnBack(){showStep(state.mode==='goal'?'goal-initial':'contributions')}
 function goTaxBack(){showStep('return')}
 function openInfo(type){
@@ -769,7 +796,7 @@ function solveGoalMonthly(target,base){return solveGoalRegular(target,base,'mont
 function monthsToTarget(target,initial,rate,frequency,regular,taxRate,mode,reinvestDeduction=false){let lo=1,hi=960;for(let i=0;i<30;i++){const mid=Math.floor((lo+hi)/2);const years=mid/12;const s=simulate({initial,years,rate,frequency,regular,taxRate,reinvestDeduction});const value=mode==='iis'?s.iisNet:s.bs;if(value>=target)hi=mid;else lo=mid+1}return hi}
 function calculate(){const input={...getInputs(),reinvestDeduction:state.reinvestDeduction};if(state.mode==='capital'&&!(input.initial>0))return alert('Укажите стартовый капитал');if(state.mode==='goal'&&!(input.target>0))return alert('Укажите сумму цели');
   if(state.mode==='goal'){const base={...input,regular:0};const regular=solveGoalRegular(input.target,base,state.frequency);input.regular=regular;input.frequency=state.frequency;state.goalRegular=regular}
-  state.calc=input;const result=simulate(input);state.result=result;renderResult();showStep('result')}
+  state.calc=input;const result=simulate(input);state.result=result;renderResult();showStep('result');trackGoalOnce(state.mode==='capital'?'capital_result':'goal_result')}
 function setDeductionMode(reinvest){
   if(!state.calc||state.reinvestDeduction===reinvest)return;
   state.reinvestDeduction=reinvest;state.calc={...state.calc,reinvestDeduction:reinvest};
@@ -943,6 +970,7 @@ function downloadPlan(){
   for(let r=1;r<plan.length;r++){for(let c=1;c<=8;c++){const cell=XLSX.utils.encode_cell({r,c});if(ws2[cell])ws2[cell].z='#,##0 [$₽-ru-RU]';}}
   XLSX.utils.book_append_sheet(wb,ws1,'Итог');XLSX.utils.book_append_sheet(wb,ws2,'План пополнений');
   XLSX.writeFile(wb,'polnyy-plan-popolneniy-iis.xlsx');
+  trackGoal('excel_download');
 }
 function goalOptimization(target,initial,rate,taxRate,currentYears){const candidates=[currentYears,Math.min(80,currentYears+2),Math.min(80,currentYears+5),80].filter((v,i,a)=>v>=currentYears&&a.indexOf(v)===i);return candidates.map(years=>({years,monthly:solveGoalRegular(target,{initial,years,rate,frequency:'monthly',regular:0,taxRate},'monthly')})).filter(x=>x.years===currentYears||x.monthly<state.goalRegular)}
 function previewGoalOptimization(v){
@@ -1038,7 +1066,7 @@ function buildAlternativeSeries(i,count,opts){
 function focusResultParameters(){const hero=document.querySelector('.result-hero');if(hero)hero.scrollIntoView({behavior:'smooth',block:'start'});}
 function editPlan(){showStep(state.mode==='capital'?'capital-1':'goal-1')}
 function editParameter(step){if(step==='result-frequency'&&state.mode==='goal'){document.getElementById('resultGoalFreqSlider')?.closest('.goal-result-frequency')?.scrollIntoView({behavior:'smooth',block:'center'});return;} state.editReturn=true;state.editStep=step;showStep(step);}function continueAfterEdit(next){if(state.editReturn){state.editReturn=false;state.editStep=null;const input={...getInputs(),reinvestDeduction:state.reinvestDeduction};if(state.mode==='goal'){const base={...input,regular:0};input.regular=solveGoalRegular(input.target,base,state.frequency);input.frequency=state.frequency;state.goalRegular=input.regular;}state.calc=input;state.result=simulate(input);renderResult();showStep('result');return true;}showStep(next);return true;}
-function restartCalculator(){state.mode=null;state.step=null;state.goal='';state.frequency='monthly';state.returnRate=20;state.returnName='ПИФ БКС';state.calc=null;state.result=null;state.paymentPage=0;state.editReturn=false;state.editStep=null;state.reinvestDeduction=false;document.querySelectorAll('.choice.selected').forEach(x=>x.classList.remove('selected'));const custom=$('customGoalField');if(custom)custom.classList.add('hidden');const cg=$('customGoalName');if(cg)cg.value='';showStep('start');}
+function restartCalculator(){trackedFunnelGoals.clear();state.mode=null;state.step=null;state.goal='';state.frequency='monthly';state.returnRate=20;state.returnName='ПИФ БКС';state.calc=null;state.result=null;state.paymentPage=0;state.editReturn=false;state.editStep=null;state.reinvestDeduction=false;document.querySelectorAll('.choice.selected').forEach(x=>x.classList.remove('selected'));const custom=$('customGoalField');if(custom)custom.classList.add('hidden');const cg=$('customGoalName');if(cg)cg.value='';showStep('start');}
 function applyDesktopInputSteps(){
   const desktop=window.matchMedia('(min-width: 601px)').matches;
   document.querySelectorAll('[data-desktop-step]').forEach(el=>{
@@ -1055,7 +1083,12 @@ function applyDesktopInputSteps(){
 }
 function formatMoneyField(el){const raw=String(el.value||'').replace(/\D/g,'');if(!raw){el.value='';return}el.value=Number(raw).toLocaleString('ru-RU');}
 function setupMoneyFields(){document.querySelectorAll('input[data-money="1"]').forEach(el=>{el.addEventListener('input',()=>formatMoneyField(el));el.addEventListener('blur',()=>formatMoneyField(el));if(el.value)formatMoneyField(el);});}
-window.addEventListener('DOMContentLoaded',()=>{setupMoneyFields();const c=$('modeTabCapital'),g=$('modeTabGoal'),go=$('startContinue');if(c)c.addEventListener('click',()=>selectModePreview('capital'));if(g)g.addEventListener('click',()=>selectModePreview('goal'));if(go)go.addEventListener('click',continueMode);applyDesktopInputSteps();updateYears($('years').value);});
+window.addEventListener('DOMContentLoaded',()=>{setupMoneyFields();const c=$('modeTabCapital'),g=$('modeTabGoal'),go=$('startContinue');if(c)c.addEventListener('click',()=>selectModePreview('capital'));if(g)g.addEventListener('click',()=>selectModePreview('goal'));if(go)go.addEventListener('click',continueMode);
+  const topUp=$('topUpBtn'),openIis=$('openIisBtn');
+  if(topUp)topUp.addEventListener('click',()=>{const params={action:'topup_iis'};trackGoal('final_cta_click',params);trackGoal('topup_iis_click',params)});
+  if(openIis)openIis.addEventListener('click',()=>{const params={action:'open_iis'};trackGoal('final_cta_click',params);trackGoal('open_iis_click',params)});
+  applyDesktopInputSteps();updateYears($('years').value);
+});
 window.addEventListener('resize',applyDesktopInputSteps);
 updateTermOptions();
 </script>
