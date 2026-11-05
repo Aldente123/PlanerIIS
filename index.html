@@ -1084,7 +1084,7 @@ function applyDesktopInputSteps(){
 function formatMoneyField(el){const raw=String(el.value||'').replace(/\D/g,'');if(!raw){el.value='';return}el.value=Number(raw).toLocaleString('ru-RU');}
 function setupMoneyFields(){document.querySelectorAll('input[data-money="1"]').forEach(el=>{el.addEventListener('input',()=>formatMoneyField(el));el.addEventListener('blur',()=>formatMoneyField(el));if(el.value)formatMoneyField(el);});}
 window.addEventListener('DOMContentLoaded',()=>{setupMoneyFields();const c=$('modeTabCapital'),g=$('modeTabGoal'),go=$('startContinue');if(c)c.addEventListener('click',()=>selectModePreview('capital'));if(g)g.addEventListener('click',()=>selectModePreview('goal'));if(go)go.addEventListener('click',continueMode);
-  const topUp=$('topUpBtn'),openIis=$('openIisBtn');
+  const topUp=$('topUpBtn'),openIis=$('openIisBtn');const isMobileDevice=(navigator.userAgentData&&typeof navigator.userAgentData.mobile==='boolean')?navigator.userAgentData.mobile:/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);if(!isMobileDevice){topUp.href='https://lk.bcs.ru/?popup=/paying-sbp-qr/iia';topUp.target='_blank';topUp.rel='noopener';openIis.href='https://lk.bcs.ru/?popup=/create-account/iia';openIis.target='_blank';openIis.rel='noopener';}
   if(topUp)topUp.addEventListener('click',()=>{const params={action:'topup_iis'};trackGoal('final_cta_click',params);trackGoal('topup_iis_click',params)});
   if(openIis)openIis.addEventListener('click',()=>{const params={action:'open_iis'};trackGoal('final_cta_click',params);trackGoal('open_iis_click',params)});
   applyDesktopInputSteps();updateYears($('years').value);
